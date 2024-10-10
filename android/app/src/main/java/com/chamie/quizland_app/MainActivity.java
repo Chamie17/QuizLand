@@ -1,0 +1,6 @@
+package com.chamie.quizland_app;
+
+import io.flutter.embedding.android.FlutterActivity;
+
+public class MainActivity extends FlutterActivity {
+}
