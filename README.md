@@ -1,16 +1,17 @@
-# quizland_app
+# QuizLand
 
-A new Flutter project.
+**QuizLand** is an interactive Learning Management System (LMS) app designed to help users learn English through quizzes, games, and activities. It is built using the **Flutter** framework, offering a seamless and engaging user experience across multiple platforms.
 
-## Getting Started
+**Develop by Chamie ❤️**
 
-This project is a starting point for a Flutter application.
+## Tech Stack
 
-A few resources to get you started if this is your first Flutter project:
+- **Frontend**: Flutter
+- **Backend**: Firebase
+- **Database**: Firebase Firestore
+  
+## Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/Chamie17/QuizLand.git
