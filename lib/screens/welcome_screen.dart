@@ -24,7 +24,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             style: TextStyle(
                 color: Colors.purple, fontSize: 60, fontFamily: 'Kablammo'),
           ),
-          Image.asset("assets/images/logo.png"),
+          SizedBox(
+            height: 350,
+            child: Image.asset("assets/images/logo.png", fit: BoxFit.fill,),
+          ),
           MyButton(text: "Đăng nhập", onPressed: () {
             Navigator.push(
                 context,
