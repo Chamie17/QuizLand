@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "316491830875",
+    "project_id": "quizland-ba92d",
+    "storage_bucket": "quizland-ba92d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316491830875:android:a06fad2ded4a2e8245117e",
+        "android_client_info": {
+          "package_name": "com.chamie.quizland_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtjmMXBu9ZLuKmrAhOBvwt9kheFwm5xSw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
