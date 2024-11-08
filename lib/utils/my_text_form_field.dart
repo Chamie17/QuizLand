@@ -10,7 +10,8 @@ class MyTextFormField extends StatefulWidget {
       required this.icon,
       this.isPassword = false,
       this.keyboardType = TextInputType.text,
-      this.textInputAction = TextInputAction.done
+      this.textInputAction = TextInputAction.done,
+      this.suffixIcon
       });
   String labelText;
   String hintText;
@@ -20,6 +21,7 @@ class MyTextFormField extends StatefulWidget {
   bool isPassword;
   TextInputType keyboardType;
   TextInputAction textInputAction;
+  IconButton? suffixIcon;
 
   @override
   State<MyTextFormField> createState() => _MyTextFormFieldState();
@@ -31,6 +33,7 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: TextFormField(
+        autofocus: true,
         validator: widget.validator,
         onFieldSubmitted: widget.onFieldSubmitted,
         obscureText: widget.isPassword,
@@ -42,24 +45,7 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
           hintStyle: const TextStyle(color: Colors.grey),
           labelStyle: const TextStyle(color: Colors.black),
           prefixIcon: Icon(widget.icon, color: Colors.black),
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.black, width: 2),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.black, width: 2),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.red, width: 2),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.redAccent, width: 2),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          suffixIcon: widget.suffixIcon,
         ),
         style: const TextStyle(fontSize: 18),
       ),

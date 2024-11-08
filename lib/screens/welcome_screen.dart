@@ -20,8 +20,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(),
-            Text(
+            const Row(),
+            const Text(
               "Quiz Land",
               style: TextStyle(
                   color: Colors.purple, fontSize: 60, fontFamily: 'Kablammo'),
@@ -34,7 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     builder: (context) => const LoginScreen(),
                   ));
             },),
-            SizedBox(
+            const SizedBox(
               height: 24,
             ),
             MyButton(text: "Đăng kí", onPressed: () {
