@@ -23,44 +23,40 @@ class _LoginScreenState extends State<LoginScreen> {
               Icons.arrow_back_sharp,
               size: 30,
             )),
-        backgroundColor: Colors.blue.shade50,
       ),
       body: SafeArea(
-        child: Container(
-          color: Colors.blue.shade50,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 40),
-                      const Text(
-                        "Welcome back!",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 32,
-                            fontFamily: 'PlaywriteFRModerne',
-                            fontWeight: FontWeight.bold),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 40),
+                    const Text(
+                      "Welcome back!",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 32,
+                          fontFamily: 'PlaywriteFRModerne',
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 350,
+                      child: Image.asset(
+                        "assets/images/login_screen.png",
+                        fit: BoxFit.fill,
                       ),
-                      SizedBox(
-                        height: 350,
-                        child: Image.asset(
-                          "assets/images/login_screen.png",
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      const SizedBox(height: 80),
-                      LoginForm()
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 80),
+                    LoginForm()
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

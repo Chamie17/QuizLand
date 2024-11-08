@@ -21,44 +21,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Icons.arrow_back_sharp,
               size: 30,
             )),
-        backgroundColor: Colors.blue.shade50,
       ),
       body: SafeArea(
-        child: Container(
-          color: Colors.blue.shade50,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 20),
-                      const Text(
-                        "Create account",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 32,
-                            fontFamily: 'PlaywriteFRModerne',
-                            fontWeight: FontWeight.bold),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Create account",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 32,
+                          fontFamily: 'PlaywriteFRModerne',
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Container(
+                      height: 300,
+                      child: Image.asset(
+                        "assets/images/register_screen.png",
+                        fit: BoxFit.fill,
                       ),
-                      Container(
-                        height: 300,
-                        child: Image.asset(
-                          "assets/images/register_screen.png",
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      RegisterForm()
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 20),
+                    RegisterForm()
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

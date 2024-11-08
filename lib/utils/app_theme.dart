@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static ThemeData appTheme = ThemeData(
       useMaterial3: true,
+      scaffoldBackgroundColor: Colors.blue.shade50,
+      appBarTheme: AppBarTheme(backgroundColor: Colors.blue.shade50),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style:
             ElevatedButton.styleFrom(backgroundColor: Colors.purple.shade300),
