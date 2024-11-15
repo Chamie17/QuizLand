@@ -2,6 +2,9 @@ import 'package:bcrypt/bcrypt.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quizland_app/screens/home_screen.dart';
+import 'package:quizland_app/screens/splash_screen.dart';
+import 'package:quizland_app/screens/welcome_screen.dart';
 
 import '../models/user.dart';
 import '../utils/my_button.dart';
@@ -128,7 +131,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 : MyButton(
                     text: "Đăng kí",
                     onPressed: () async {
-                      if (_key.currentState!.validate()) {
+                      if (_key.currentState?.validate() ?? false) {
                         _key.currentState!.save();
 
                         setState(() {
@@ -199,7 +202,10 @@ class _RegisterFormState extends State<RegisterForm> {
                                   if (user != null) {
                                     await user.updateDisplayName(_username);
                                     await user.updatePassword(_matKhau!);
+                                    await user.updatePhotoURL("https://firebasestorage.googleapis.com/v0/b/quizland-ba92d.firebasestorage.app/o/avatars%2Fdefault%20avatar.png?alt=media&token=96a8a7af-b4b3-4fbf-86aa-615ec12b2074");
                                     await user.reload();
+
+                                    print(user);
 
                                     User currentUser =
                                     FirebaseAuth.instance.currentUser!;
@@ -217,10 +223,10 @@ class _RegisterFormState extends State<RegisterForm> {
                                         .doc(currentUser.uid)
                                         .set(newUser.toJson());
 
-                                    Navigator.popUntil(
-                                      context,
-                                          (route) => route.isFirst,
-                                    );
+
+                                    await user.reload().then((_) => Navigator.push(context, MaterialPageRoute(builder: (context) => const SplashScreen(),)) );
+
+
                                     setState(() {
                                       _isLoading = false;
                                     });

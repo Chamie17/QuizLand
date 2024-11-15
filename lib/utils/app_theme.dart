@@ -33,5 +33,19 @@ class AppTheme {
         ),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-      ));
+      ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: Colors.purple[100],
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.black,
+      selectedLabelStyle: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold
+      ),
+      unselectedLabelStyle: TextStyle(
+        fontSize: 20,
+      )
+    )
+  );
+
 }

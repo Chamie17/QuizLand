@@ -2,6 +2,7 @@ import 'package:bcrypt/bcrypt.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quizland_app/screens/splash_screen.dart';
 import 'package:quizland_app/utils/my_text_form_field.dart';
 
 import '../models/user.dart';
@@ -102,7 +103,7 @@ class _LoginFormState extends State<LoginForm> {
                 : MyButton(
                     text: "Đăng nhập",
                     onPressed: () async {
-                      if (_key.currentState!.validate()) {
+                      if (_key.currentState?.validate() ?? false) {
                         _key.currentState!.save();
 
                         setState(() {
@@ -166,7 +167,7 @@ class _LoginFormState extends State<LoginForm> {
                                   "Sai tên đăng nhập hoặc mật khẩu, vui long thử lại!"),
                               actions: [
                                 TextButton(
-                                  onPressed: () => Navigator.pop(context),
+                                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SplashScreen(),)),
                                   child: const Text("OK"),
                                 ),
                               ],
