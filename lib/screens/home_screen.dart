@@ -26,7 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
   
   void init() async {
     final player = AudioPlayer();
-    await player.play(AssetSource('musics/bg_music.mp3'));
+    player.setReleaseMode(ReleaseMode.loop);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await player.setSource(AssetSource('musics/bg_music.mp3'));
+      await player.resume();
+    });
   }
 
   @override
