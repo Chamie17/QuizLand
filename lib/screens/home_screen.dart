@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,16 @@ class _HomeScreenState extends State<HomeScreen> {
       return SettingScreen();
     }
     return HomeBody();
+  }
+  
+  void init() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource('musics/bg_music.mp3'));
+  }
+
+  @override
+  void initState() {
+    init();
   }
 
   @override
@@ -51,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: SizedBox(
                 height: 24,
                 child: Image.asset("assets/images/setting.png"),
-              ), label: "Cài đặt"),
+              ), label: "Tuỳ chỉnh"),
         ],
         currentIndex: _currentIndex,
         onTap: (value) {

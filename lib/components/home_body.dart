@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:quizland_app/screens/matching_game_screen.dart';
+import 'package:quizland_app/screens/menu_screen.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -256,6 +258,22 @@ class _HomeBodyState extends State<HomeBody>
 
     )..show(context:context);
   }
+  
+  void _goToMatchingScreen() async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFd5c1a6), boxColor: Colors.yellowAccent,),));
+  }
+
+  void _goToCommuniateScreen() async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF80b2b3), boxColor: Color(0xFFc56980),),));
+  }
+
+  void _goToWordScreen() async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFc1a3ef), boxColor: Color(0xFFefa13e),),));
+  }
+
+  void _goToMusicScreen() async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF75cde8), boxColor: Color(0xFFf5f05e),),));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -297,9 +315,17 @@ class _HomeBodyState extends State<HomeBody>
                 builder: (context, child) {
                   return Transform.scale(
                     scale: _musicAnimation.value,
-                    child: SizedBox(
-                      height: 160,
-                      child: Image.asset('assets/images/h1.png'),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap:  _goToMusicScreen,
+                        child: SizedBox(
+                          height: 160,
+                          child: Image.asset('assets/images/h1.png'),
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -324,9 +350,17 @@ class _HomeBodyState extends State<HomeBody>
                 builder: (context, child) {
                   return Transform.scale(
                     scale: _wordAnimation.value,
-                    child: SizedBox(
-                      height: 160,
-                      child: Image.asset('assets/images/h2.png'),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap:  _goToWordScreen,
+                        child: SizedBox(
+                          height: 160,
+                          child: Image.asset('assets/images/h2.png'),
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -352,9 +386,17 @@ class _HomeBodyState extends State<HomeBody>
                 builder: (context, child) {
                   return Transform.scale(
                     scale: _musicAnimation.value,
-                    child: SizedBox(
-                      height: 160,
-                      child: Image.asset('assets/images/h3.png'),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap:  _goToCommuniateScreen,
+                        child: SizedBox(
+                          height: 160,
+                          child: Image.asset('assets/images/h3.png'),
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -370,6 +412,7 @@ class _HomeBodyState extends State<HomeBody>
               ),
             ),
 
+            // nha ket noi
             Positioned(
               key: _keyConnect,
               left: 60,
@@ -379,9 +422,17 @@ class _HomeBodyState extends State<HomeBody>
                 builder: (context, child) {
                   return Transform.scale(
                     scale: _wordAnimation.value,
-                    child: SizedBox(
-                      height: 160,
-                      child: Image.asset('assets/images/h4.png'),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap:  _goToMatchingScreen,
+                        child: SizedBox(
+                          height: 160,
+                          child: Image.asset('assets/images/h4.png'),
+                        ),
+                      ),
                     ),
                   );
                 },
