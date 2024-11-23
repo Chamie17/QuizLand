@@ -12,7 +12,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _currentIndex = 0;
 
   Widget _handleScreen() {
@@ -23,20 +23,39 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return HomeBody();
   }
-  
-  void init() async {
-    final player = AudioPlayer();
+
+  final AudioPlayer player = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+
     player.setReleaseMode(ReleaseMode.loop);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await player.setSource(AssetSource('musics/bg_music.mp3'));
       await player.resume();
     });
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
-  void initState() {
-    init();
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    player.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.paused) {
+      player.pause();
+    } else if (state == AppLifecycleState.resumed) {
+      player.resume();
+    }
   }
 
   @override
