@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:quizland_app/services/question_service.dart';
 
 class MatchingGameScreen extends StatefulWidget {
   const MatchingGameScreen({super.key});
@@ -9,22 +10,18 @@ class MatchingGameScreen extends StatefulWidget {
 }
 
 class _MatchingGameScreenState extends State<MatchingGameScreen> {
-  Widget _buildQuestion(String question, int index) {
+  Widget _buildQuestion(String question, String url) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        child: Image.asset(
-          "assets/images/$question.png",
+        child: Image.network(
+          url,
           width: 100,
           height: 100,
         ),
         onTap: () {
           setState(() {
-            currentQuestion = question;
-            if (currentQuestion == currentAnswer) {
-              result[index] = true;
-              _checkFinish();
-            }
+
           });
         },
       ),
@@ -63,6 +60,19 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
   String? currentQuestion;
   String? currentAnswer;
 
+  late List<Map<String, String>> images;
+
+  void init() async {
+    images = await questionService.getImages('me_and_my_friends');
+    images = images.sublist(0, 4);
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
   List<bool> result = [false, false, false, false];
 
   void _checkFinish() {
@@ -74,6 +84,10 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
         ),
       );
     }
+  }
+
+  Future<List<Widget>> questionColumn() async {
+    return images.map((image) => _buildQuestion(image['name']!, image['url']!)).toList();
   }
 
   @override
@@ -96,27 +110,29 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                if (!result[0] || currentAnswer != currentAnswer)
-                  _buildQuestion('monkey', 0),
-                if (!result[1] || currentAnswer != currentAnswer)
-                  _buildQuestion('coin', 1),
-                if (!result[2] || currentAnswer != currentAnswer)
-                  _buildQuestion('cloud1', 2),
-                if (!result[3] || currentAnswer != currentAnswer)
-                  _buildQuestion('logo', 3)
+                FutureBuilder<List<Widget>>(
+                  future: questionColumn(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Text('No questions available');
+                    } else {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: snapshot.data!,
+                      );
+                    }
+                  },
+                ),
               ],
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                if (!result[1] || currentAnswer != currentAnswer)
-                  _buildAnswer('coin', 1),
-                if (!result[0] || currentAnswer != currentAnswer)
-                  _buildAnswer('monkey', 0),
-                if (!result[2] || currentAnswer != currentAnswer)
-                  _buildAnswer('cloud1', 2),
-                if (!result[3] || currentAnswer != currentAnswer)
-                  _buildAnswer('logo', 3)
+
               ],
             ),
           ],

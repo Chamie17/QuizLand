@@ -97,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          player.stop();
           FirebaseAuth.instance.signOut();
         },
         child: Text("Logout"),

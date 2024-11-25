@@ -45,6 +45,14 @@ class _MenuScreenState extends State<MenuScreen>
     super.dispose();
   }
 
+  void _handleEnterGameScreen() async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MatchingGameScreen(),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,14 +114,7 @@ class _MenuScreenState extends State<MenuScreen>
                 itemCount: 20,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: () {
-                      print(index);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MatchingGameScreen(),
-                          ));
-                    },
+                    onTap: _handleEnterGameScreen,
                     child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(

@@ -283,7 +283,7 @@ class _HomeBodyState extends State<HomeBody>
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - 77,
+              height: MediaQuery.of(context).size.height - 68,
               child: Image.asset('assets/images/bg.jpg', fit: BoxFit.cover,),
             ),
             // sun

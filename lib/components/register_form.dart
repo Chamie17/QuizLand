@@ -1,12 +1,9 @@
-import 'package:bcrypt/bcrypt.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:quizland_app/screens/home_screen.dart';
-import 'package:quizland_app/screens/splash_screen.dart';
-import 'package:quizland_app/screens/welcome_screen.dart';
+import 'package:quizland_app/services/user_serivce.dart';
 
-import '../models/user.dart';
 import '../utils/my_button.dart';
 import '../utils/my_text_form_field.dart';
 
@@ -19,33 +16,34 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   String? _matKhau;
-  String? _username;
+  String? _name;
   String? _phone;
+  String? _email;
   bool _isLoading = false;
 
   var _key = GlobalKey<FormState>();
 
-  Future<bool> _checkPhoneExisted() async {
-    final QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .where('phone', isEqualTo: _phone)
-        .get();
-    if (snapshot.docs.isNotEmpty) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  void _handleRegister() async {
+    if (_key.currentState?.validate() ?? false) {
+      _key.currentState!.save();
 
-  Future<bool> _checkUsernameExisted() async {
-    final QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .where('name', isEqualTo: _username)
-        .get();
-    if (snapshot.docs.isNotEmpty) {
-      return true;
-    } else {
-      return false;
+      UserCredential? credential = await userService.register(_email!, _matKhau!, _name!);
+      if (credential != null) {
+        try {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: _email!,
+            password: _matKhau!,
+          );
+        } catch (e) {
+          print('Error during sign-in: $e');
+        }
+      } else {
+        final result = await showOkAlertDialog(
+          context: context,
+          title: 'Lỗi',
+          message: 'Tài khoản đã tồn tại!',
+        );
+      }
     }
   }
 
@@ -56,42 +54,37 @@ class _RegisterFormState extends State<RegisterForm> {
         child: Column(
           children: [
             MyTextFormField(
-              labelText: "Tên đăng nhập",
-              hintText: "Hãy điền tên đăng nhập",
-              icon: Icons.person,
+              labelText: "Địa chỉ email",
+              hintText: "Hãy điền địa chỉ email",
+              icon: Icons.mail,
               onFieldSubmitted: (_) {},
               validator: (value) {
-                if (value == null || value.length == 0) {
-                  return "Vui lòng điền tên đăng nhập!";
+                if (value?.isEmpty ?? true) {
+                  return "Vui lòng điền địa chỉ email!";
+                } else if (!EmailValidator.validate(value!)) {
+                  return "Địa chỉ email không hợp lệ";
                 }
-                _username = value;
+                _email = value;
                 return null;
               },
+              keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
             ),
             const SizedBox(height: 10),
             MyTextFormField(
-              labelText: "Số điện thoại",
-              hintText: "Hãy điền số điện thoại",
-              icon: Icons.phone,
+              labelText: "Họ và tên",
+              hintText: "Hãy điền họ và tên",
+              icon: Icons.person,
               onFieldSubmitted: (_) {},
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Vui lòng điền số điện thoại!";
-                } else if (value.length != 10 ||
-                    !RegExp(r'^[0-9]+$').hasMatch(value)) {
-                  return "Số điện thoại không hợp lệ!";
-                } else if (!value.startsWith("0")) {
-                  return "Số điện thoại không hợp lệ!";
+                if (value?.isEmpty ?? true) {
+                  return "Vui lòng điền họ và tên!";
                 }
-                _phone = value.length == 10
-                    ? "+84${value.substring(1)}"
-                    : "+84$value";
-                print(_phone!.trim());
+                _name = value;
                 return null;
               },
+              keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 10),
             MyTextFormField(
@@ -130,113 +123,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 ? const CircularProgressIndicator()
                 : MyButton(
                     text: "Đăng kí",
-                    onPressed: () async {
-                      if (_key.currentState?.validate() ?? false) {
-                        _key.currentState!.save();
-
-                        setState(() {
-                          _isLoading = true;
-                        });
-
-                        bool isPhoneExisted = await _checkPhoneExisted();
-                        bool isUsernameExisted = await _checkUsernameExisted();
-
-                        if (isPhoneExisted || isUsernameExisted) {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text("Đăng kí thất bại"),
-                              content: Text(
-                                  isPhoneExisted ? "Số điện thoại đã được sử dụng, hãy thử lại với 1 số khác!" :
-                                  "Tên đăng nhập đã tồn tại, hãy thử lại với 1 số khác!"),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text("OK"),
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          await FirebaseAuth.instance.verifyPhoneNumber(
-                              phoneNumber: _phone,
-                              timeout: const Duration(seconds: 120),
-                              verificationCompleted: (_) {},
-                              verificationFailed: (FirebaseAuthException e) {
-                                setState(() {
-                                  _isLoading = false;
-                                });
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: const Text("Đăng kí thất bại"),
-                                    content: const Text(
-                                        "Số điện thoại của bạn không được hỗ trợ, hãy thử lại với 1 số khác!"),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: const Text("OK"),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              codeSent: (String verificationId,
-                                  int? resendToken) async {
-                                PhoneAuthCredential credential =
-                                PhoneAuthProvider.credential(
-                                  verificationId: verificationId,
-                                  smsCode: "111111",
-                                );
-
-                                if (credential != null) {
-                                  UserCredential userCredential =
-                                  await FirebaseAuth.instance
-                                      .signInWithCredential(credential);
-
-                                  User? user = userCredential.user;
-
-                                  if (user != null) {
-                                    await user.updateDisplayName(_username);
-                                    await user.updatePassword(_matKhau!);
-                                    await user.updatePhotoURL("https://firebasestorage.googleapis.com/v0/b/quizland-ba92d.firebasestorage.app/o/avatars%2Fdefault%20avatar.png?alt=media&token=96a8a7af-b4b3-4fbf-86aa-615ec12b2074");
-                                    await user.reload();
-
-                                    print(user);
-
-                                    User currentUser =
-                                    FirebaseAuth.instance.currentUser!;
-
-                                    MyUser newUser = MyUser(
-                                      uid: currentUser.uid,
-                                      name: currentUser.displayName,
-                                      phone: currentUser.phoneNumber,
-                                      password: BCrypt.hashpw(
-                                          _matKhau!, BCrypt.gensalt()),
-                                    );
-
-                                    await FirebaseFirestore.instance
-                                        .collection("users")
-                                        .doc(currentUser.uid)
-                                        .set(newUser.toJson());
-
-
-                                    await user.reload().then((_) => Navigator.push(context, MaterialPageRoute(builder: (context) => const SplashScreen(),)) );
-
-
-                                    setState(() {
-                                      _isLoading = false;
-                                    });
-                                  }
-                                }
-                              },
-                              codeAutoRetrievalTimeout: (verificationId) {});
-                        }
-                      }
-                    }),
+                    onPressed: _handleRegister),
           ],
         ));
   }

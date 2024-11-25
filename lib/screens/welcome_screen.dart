@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quizland_app/screens/login_screen.dart';
 import 'package:quizland_app/screens/register_screen.dart';
+import 'package:quizland_app/utils/app_router.dart';
 import 'package:quizland_app/utils/my_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -11,6 +13,15 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+
+  void _goToLoginScreen() {
+    context.pushNamed('login');
+  }
+
+  void _goToRegisterScreen() {
+    context.pushNamed('register');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,23 +39,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             height: 350,
             child: Image.asset("assets/images/logo.png", fit: BoxFit.fill,),
           ),
-          MyButton(text: "Đăng nhập", onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginScreen(),
-                ));
-          },),
+          MyButton(text: "Đăng nhập", onPressed: _goToLoginScreen),
           const SizedBox(
             height: 24,
           ),
-          MyButton(text: "Đăng kí", onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const RegisterScreen(),
-                ));
-          },)
+          MyButton(text: "Đăng kí", onPressed: _goToRegisterScreen,)
         ],
       ),
     );
