@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           player.stop();
           FirebaseAuth.instance.signOut();
         },
-        child: Text("Logout"),
+        child: const Text("Logout"),
       ),
     );
   }

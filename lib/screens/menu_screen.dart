@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:quizland_app/screens/arrange_sentence_game_screen.dart';
+import 'package:quizland_app/screens/listening_game_screen.dart';
 import 'package:quizland_app/screens/matching_game_screen.dart';
+import 'package:quizland_app/screens/word_input_game_screen.dart';
 
 class MenuScreen extends StatefulWidget {
-  MenuScreen({super.key, required this.backgroundColor, required this.boxColor});
+  MenuScreen({super.key, required this.backgroundColor, required this.boxColor, required this.gameName});
   Color backgroundColor;
   Color boxColor;
+  String gameName;
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
@@ -45,11 +49,25 @@ class _MenuScreenState extends State<MenuScreen>
     super.dispose();
   }
 
-  void _handleEnterGameScreen() async {
+  void _handleEnterGameScreen(int level) async {
+
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MatchingGameScreen(),
+          builder: (context) {
+            switch (widget.gameName) {
+              case 'matching':
+                return MatchingGameScreen(level: level);
+              case 'music':
+                return ListeningGameScreen(level: level);
+              case 'word':
+                return WordInputGameScreen(level: level);
+              case 'communicate':
+                return ArrangeSentenceGameScreen(level: level);
+              default:
+                return MatchingGameScreen(level: level);
+            }
+          },
         ));
   }
 
@@ -73,7 +91,7 @@ class _MenuScreenState extends State<MenuScreen>
               right: 0,
               child: Lottie.asset('assets/lottiefiles/monkey_top.json',
                   height: 220)),
-          Positioned(
+          const Positioned(
               left: 70,
               top: 60,
               child: Text(
@@ -105,7 +123,7 @@ class _MenuScreenState extends State<MenuScreen>
               width: 380,
               height: 800,
               child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
@@ -114,7 +132,7 @@ class _MenuScreenState extends State<MenuScreen>
                 itemCount: 20,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: _handleEnterGameScreen,
+                    onTap: () => _handleEnterGameScreen(index + 1),
                     child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -123,7 +141,7 @@ class _MenuScreenState extends State<MenuScreen>
                       ),
                       child: Text(
                         '${index + 1}',
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 36,
                             fontFamily: 'Kablammo'),
@@ -131,7 +149,7 @@ class _MenuScreenState extends State<MenuScreen>
                     ),
                   );
                 },
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
               ),
             ),
           ),

@@ -260,19 +260,19 @@ class _HomeBodyState extends State<HomeBody>
   }
   
   void _goToMatchingScreen() async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFd5c1a6), boxColor: Colors.yellowAccent,),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFd5c1a6), boxColor: Colors.yellowAccent, gameName: 'matching',),));
   }
 
-  void _goToCommuniateScreen() async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF80b2b3), boxColor: Color(0xFFc56980),),));
+  void _goToCommunicateScreen() async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF80b2b3), boxColor: Color(0xFFc56980), gameName: 'communicate',),));
   }
 
   void _goToWordScreen() async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFc1a3ef), boxColor: Color(0xFFefa13e),),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFc1a3ef), boxColor: Color(0xFFefa13e), gameName: 'word',),));
   }
 
   void _goToMusicScreen() async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF75cde8), boxColor: Color(0xFFf5f05e),),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF75cde8), boxColor: Color(0xFFf5f05e), gameName: 'music',),));
   }
 
   @override
@@ -391,7 +391,7 @@ class _HomeBodyState extends State<HomeBody>
                       child: InkWell(
                         highlightColor: Colors.transparent,
                         splashColor: Colors.transparent,
-                        onTap:  _goToCommuniateScreen,
+                        onTap:  _goToCommunicateScreen,
                         child: SizedBox(
                           height: 160,
                           child: Image.asset('assets/images/h3.png'),
