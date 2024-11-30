@@ -95,7 +95,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Game Completed'),
-        content: Text('You scored $_point points with $_minus penalties!'),
+        content: Text('Bạn nhận $_point trái chuối và  sai $_minus lần!'),
         actions: [
           TextButton(
             onPressed: () {
@@ -160,68 +160,163 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
           _selectedAnswers.clear();
         });
 
-        // Check if the round is complete
-        if (_questionMatched.every((matched) => matched)) {
-          _loadNextRound();
-        }
+        // Wait for the visual effect before proceeding
+        Future.delayed(const Duration(milliseconds: 600), () {
+          // Check if the round is complete
+          if (_questionMatched.every((matched) => matched)) {
+            _loadNextRound();
+          }
+        });
       } else {
         setState(() {
           _minus++;
-          _selectedQuestions.clear();
-          _selectedAnswers.clear();
+          // Trigger the red effect for incorrect match
+          final questionIndex = _questions.indexOf(question);
+          final answerIndex = _answers.indexOf(answer);
+          _questionMatched[questionIndex] = false;
+          _answerMatched[answerIndex] = false;
         });
+
+        // Show red effect and then reset after 1 second
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          setState(() {
+            // Reset the selection and color after the red effect
+            _questionSelected = List<bool>.filled(_questions.length, false);
+            _answerSelected = List<bool>.filled(_answers.length, false);
+          });
+        });
+
+        _selectedQuestions.clear();
+        _selectedAnswers.clear();
       }
     }
   }
 
+
+
   Widget _buildQuestion(int index) {
+    final bool isSelected = _questionSelected[index];
+    final bool isMatched = _questionMatched[index];
+    final bool isIncorrect = _questionMatched[index] == false && _questionSelected[index]; // Incorrect match check
+    final double size = isSelected ? 180 : 170; // Increase size when selected
+
+    // Set background color: Green for correct, Red for incorrect, Transparent otherwise
+    final color = isMatched
+        ? Colors.green
+        : (isIncorrect ? Colors.red : Colors.transparent);
+
     return GestureDetector(
       onTap: () => _onSelectQuestion(index),
-      child: AnimatedOpacity(
-        opacity: _questionMatched[index] ? 0 : 1,
-        duration: const Duration(milliseconds: 300),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 32),
-          child: Card(
-            elevation: 4,
-            child: Image.asset(
-              height: 100,
-              _questions[index],
-              fit: BoxFit.cover,
-            ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: color, // Red or Green for incorrect or correct matches
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // The image itself
+              AnimatedOpacity(
+                opacity: isMatched ? 0 : 1,
+                duration: const Duration(milliseconds: 300),
+                child: Card(
+                  elevation: 4,
+                  child: Image.asset(
+                    height: size,
+                    _questions[index],
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+              ),
+              // Image overlay when match is correct (green background)
+              if (isMatched)
+                Positioned(
+                  child: Image.asset(
+                    'assets/images/correct_icon.png', // Path to the correct match image
+                    width: 200, // Adjust the size of the overlay image
+                    height: 200,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+            ],
           ),
         ),
       ),
     );
   }
 
+
+
+
+
   Widget _buildAnswer(int index) {
+    final bool isSelected = _answerSelected[index];
+    final bool isMatched = _answerMatched[index];
+    final bool isIncorrect = _answerMatched[index] == false && _answerSelected[index]; // Incorrect match check
+    final double size = isSelected ? 180 : 170; // Increase size when selected
+
+    // Set background color: Green for correct, Red for incorrect, Transparent otherwise
+    final color = isMatched
+        ? Colors.green
+        : (isIncorrect ? Colors.red : Colors.transparent);
+
     return GestureDetector(
       onTap: () => _onSelectAnswer(index),
-      child: AnimatedOpacity(
-        opacity: _answerMatched[index] ? 0 : 1,
-        duration: const Duration(milliseconds: 300),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 32),
-          child: Card(
-            elevation: 4,
-            child: Container(
-              height: 100,
-              width: 100,
-              child: Center(
-                child: Text(
-                  _answers[index],
-                  style:
-                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: color, // Red or Green for incorrect or correct matches
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // The answer text itself
+              AnimatedOpacity(
+                opacity: isMatched ? 0 : 1,
+                duration: const Duration(milliseconds: 300),
+                child: Card(
+                  elevation: 4,
+                  child: Center(
+                    child: Text(
+                      _answers[index],
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              // Image overlay when match is correct (green background)
+              if (isMatched)
+                Positioned(
+                  child: Image.asset(
+                    'assets/images/correct_icon.png', // Path to the correct match image
+                    width: 200, // Adjust the size of the overlay image
+                    height: 200,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+            ],
           ),
         ),
       ),
     );
   }
+
+
+
+
 
   Widget _buildGameBoard() {
     return Expanded(
@@ -251,7 +346,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Text(
-        'Points: $_point | Penalty: $_minus',
+        'Chuối: $_point | Sai: $_minus',
         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
     );
@@ -287,7 +382,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
         onPressed: () {
           _loadNextRound(); // Skip current round
         },
-        child: const Icon(Icons.refresh),
+        child: const Icon(Icons.skip_next),
       ),
     );
   }
