@@ -1,0 +1,34 @@
+[
+  {
+    "question": "Đây là Cô Hoa.",
+    "answer": "This is Ms Hoa."
+  },
+  {
+    "question": "Xin chào Cô Hoa.",
+    "answer": "Hi, Ms Hoa."
+  },
+  {
+    "question": "Kia là Thầy Bean.",
+    "answer": "That's Mr Bean."
+  },
+  {
+    "question": "Xin chào Thầy Long.",
+    "answer": "Hello, Mr Long."
+  },
+  {
+    "question": "Đây có phải là Bill không? Không, không phải. Đây là Ben.",
+    "answer": "Is this Bill? No, it isn't. It's Ben"
+  },
+  {
+    "question": "Kia có phải là Minh không? Phải.",
+    "answer": "Is that Minh? Yes, it is."
+  },
+  {
+    "question": "Đây là bạn thân của tớ.",
+    "answer": "This is my close friend."
+  },
+  {
+    "question": "Kia là giáo viên của tớ, cô Brown.",
+    "answer": "That is my teacher, Ms Brown."
+  }
+]

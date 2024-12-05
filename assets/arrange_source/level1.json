@@ -1,0 +1,26 @@
+[
+  {
+    "question": "Xin chào, tớ là Ben.",
+    "answer": "Hello, I'm Ben."
+  },
+  {
+    "question": "Chào Ben. Tớ là Mai.",
+    "answer": "Hi Ben. I'm Mai."
+  },
+  {
+    "question": "Chào Lucy. Cậu khoẻ không?",
+    "answer": "Hi, Lucy, How are you?"
+  },
+  {
+    "question": "Tớ khoẻ, cảm ơn cậu.",
+    "answer": "I'm fine, thank you."
+  },
+  {
+    "question": "Tạm biệt Lucy.",
+    "answer": "Goodbye, Lucy."
+  },
+  {
+    "question": "Tạm biệt Ben.",
+    "answer": "Bye, Ben."
+  }
+]

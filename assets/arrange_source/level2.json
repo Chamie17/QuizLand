@@ -1,0 +1,30 @@
+[
+  {
+    "question": "Cậu tên là gì?",
+    "answer": "What's your name?"
+  },
+  {
+    "question": "Tớ tên là Mary.",
+    "answer": "My name's Mary."
+  },
+  {
+    "question": "Cậu bao nhiêu tuổi?",
+    "answer": "How old are you?"
+  },
+  {
+    "question": "Tớ tám tuổi rồi.",
+    "answer": "I'm eight years old."
+  },
+  {
+    "question": "Cậu ấy mười tuổi rồi.",
+    "answer": "He is ten years old."
+  },
+  {
+    "question": "Tớ có sáu cái kẹo.",
+    "answer": "I have six candies."
+  },
+  {
+    "question": "My và Lan đều sáu tuổi.",
+    "answer": "My and Lan are six years old."
+  }
+]

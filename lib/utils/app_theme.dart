@@ -7,7 +7,11 @@ class AppTheme {
       appBarTheme: AppBarTheme(backgroundColor: Colors.blue.shade50),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style:
-            ElevatedButton.styleFrom(backgroundColor: Colors.purple.shade300),
+            ElevatedButton.styleFrom(backgroundColor: Colors.purple.shade300, textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold
+            ),),
       ),
       textTheme: const  TextTheme(
           labelSmall: TextStyle(

@@ -25,10 +25,15 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
   List<String> _selectedAnswers = [];
   List<bool> _questionSelected = [];
   List<bool> _answerSelected = [];
+  List<String> _originalQuestions = [];
+  List<String> _originalAnswers = [];
+  List<int> _usedQuestions = [];  // List to track used questions
   int _point = 0;
   int _minus = 0;
   int _currentRound = 0; // Track the current round
+  final int _maxRounds = 7; // Maximum rounds
   final int _roundSize = 3; // Number of pairs per round
+  int _roundsRemaining = 7; // Tracks remaining rounds
 
 
   @override
@@ -40,8 +45,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
   void init() async {
     if (matchingLevel.containsKey(widget.level)) {
       final folderPath = 'assets/matching_source/${widget.level}/';
-      final List<String> images =
-      matchingLevel[widget.level]!.map((e) => folderPath + e).toList();
+      final List<String> images = matchingLevel[widget.level]!.map((e) => folderPath + e).toList();
 
       // Extract base names (without extensions) for answers
       final List<String> answers = images
@@ -49,48 +53,110 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
           .toList();
 
       setState(() {
-        _allQuestions = images;
-        _allAnswers = answers;
+        _allQuestions = List.from(images); // Preserve the original questions list
+        _allAnswers = List.from(answers); // Preserve the original answers list
+        _originalQuestions = List.from(images); // Copy the original questions
+        _originalAnswers = List.from(answers); // Copy the original answers
       });
 
       _loadNextRound();
     }
   }
 
+  // Add this to track the display count (already existing in your code)
+  Map<String, int> questionDisplayCount = {};
+
   void _loadNextRound() {
-    if (_allQuestions.isEmpty) {
+    if (_roundsRemaining <= 0) {
       // All rounds completed
       _showCompletionDialog();
       return;
     }
 
     setState(() {
-      // Get up to 3 items for the current round
-      final roundQuestions = _allQuestions.take(_roundSize).toList();
-      final roundAnswers = _allAnswers.take(_roundSize).toList();
-
-      // Remove these items from the pool
-      _allQuestions = _allQuestions.sublist(roundQuestions.length);
-      _allAnswers = _allAnswers.sublist(roundAnswers.length);
-
-      // Shuffle answers
       final random = Random();
+
+      // Ensure you have at least 3 pairs of questions/answers for each round
+      final roundSize = min(_roundSize, _originalQuestions.length);
+
+      List<String> roundQuestions = [];
+      List<String> roundAnswers = [];
+
+      // List to track already selected questions
+      Set<int> selectedIndices = Set<int>();
+
+      // List to track used questions in previous rounds
+      List<int> unusedQuestions = List<int>.generate(_originalQuestions.length, (index) => index);
+
+      // First, shuffle the questions to get random selection
+      unusedQuestions.shuffle(random);
+
+      // Select questions ensuring each is shown at least twice
+      for (int i = 0; i < roundSize; i++) {
+        bool questionSelected = false;
+
+        // Try to select a question that has been displayed less than twice
+        for (int j = 0; j < unusedQuestions.length; j++) {
+          int randomIndex = unusedQuestions[j];
+
+          // Check if the question has been displayed less than twice
+          if ((questionDisplayCount[_originalQuestions[randomIndex]] ?? 0) < 2) {
+            roundQuestions.add(_originalQuestions[randomIndex]);
+            roundAnswers.add(_originalAnswers[randomIndex]);
+            selectedIndices.add(randomIndex);  // Mark as selected
+
+            // Update the display count
+            questionDisplayCount[_originalQuestions[randomIndex]] =
+                (questionDisplayCount[_originalQuestions[randomIndex]] ?? 0) + 1;
+
+            questionSelected = true;
+            unusedQuestions.removeAt(j); // Remove the question from unused pool
+            break;
+          }
+        }
+
+        // If no question with less than 2 displays is available, use any question
+        if (!questionSelected && unusedQuestions.isNotEmpty) {
+          int randomIndex = unusedQuestions.removeLast();  // Select any remaining question
+          roundQuestions.add(_originalQuestions[randomIndex]);
+          roundAnswers.add(_originalAnswers[randomIndex]);
+          selectedIndices.add(randomIndex);  // Mark as selected
+
+          // Update the display count
+          questionDisplayCount[_originalQuestions[randomIndex]] =
+              (questionDisplayCount[_originalQuestions[randomIndex]] ?? 0) + 1;
+        }
+      }
+
+      // Shuffle answers to make the game more challenging
       roundAnswers.shuffle(random);
 
-      // Update state
+      // Update the round data
       _questions = roundQuestions;
       _answers = roundAnswers;
+
+      // Initialize match status for this round
       _questionMatched = List<bool>.filled(roundQuestions.length, false);
       _answerMatched = List<bool>.filled(roundAnswers.length, false);
       _questionSelected = List<bool>.filled(roundQuestions.length, false);
       _answerSelected = List<bool>.filled(roundAnswers.length, false);
       _selectedQuestions.clear();
       _selectedAnswers.clear();
+
       _currentRound++;
+      _roundsRemaining--; // Decrease remaining rounds
     });
   }
 
+
+// Log the display counts when needed (for debugging)
+  void _logQuestionDisplayCounts() {
+    questionDisplayCount.forEach((question, count) {
+      print('Question: $question displayed $count times');
+    });
+  }
   void _showCompletionDialog() {
+    _logQuestionDisplayCounts();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -107,19 +173,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
         ],
       ),
     );
-  }
-
-  void _shuffle() {
-    final random = Random();
-    // Shuffle both questions (images) and answers (words)
-    _questions.shuffle(random);
-    _answers.shuffle(random);
-
-    // Reset match and selection lists
-    _questionMatched = List<bool>.filled(_questions.length, false);
-    _answerMatched = List<bool>.filled(_answers.length, false);
-    _questionSelected = List<bool>.filled(_questions.length, false);
-    _answerSelected = List<bool>.filled(_answers.length, false);
   }
 
   void _onSelectQuestion(int index) {
@@ -343,14 +396,37 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
   }
 
   Widget _buildScore() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Text(
-        'Chuối: $_point | Sai: $_minus',
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Positioned(
+      top: 225,
+      left: 20,
+      right: 20,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Correct: $_point',
+              style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold
+              ),
+            ),
+            Text(
+              'Incorrect: $_minus',
+              style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
