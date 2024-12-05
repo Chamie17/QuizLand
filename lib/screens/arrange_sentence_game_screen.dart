@@ -199,9 +199,8 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 100, right: 16, left: 16),
-                child: Container(
-                  // color: Colors.blue,
+                padding: const EdgeInsets.only(top: 100, right: 32, left: 32),
+                child: SizedBox(
                   width: double.maxFinite,
                   child: Center(
                     child: Text(
