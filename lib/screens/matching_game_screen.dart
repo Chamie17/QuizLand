@@ -245,31 +245,29 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
     }
   }
 
-
-
   Widget _buildQuestion(int index) {
     final bool isSelected = _questionSelected[index];
     final bool isMatched = _questionMatched[index];
-    final bool isIncorrect = _questionMatched[index] == false && _questionSelected[index]; // Incorrect match check
+    final bool isIncorrect = !isMatched && isSelected; // Simplified incorrect match check
     final double size = isSelected ? 180 : 170; // Increase size when selected
 
     // Set background color: Green for correct, Red for incorrect, Transparent otherwise
-    final color = isMatched
+    final Color backgroundColor = isMatched
         ? Colors.green
         : (isIncorrect ? Colors.red : Colors.transparent);
 
     return GestureDetector(
       onTap: () => _onSelectQuestion(index),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32),
+        padding: const EdgeInsets.symmetric(vertical: 16), // Reduced padding for balance
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color: color, // Red or Green for incorrect or correct matches
-            borderRadius: BorderRadius.circular(8),
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(12), // Slightly more rounded corners
           ),
           child: Stack(
             alignment: Alignment.center,
@@ -280,10 +278,13 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
                 duration: const Duration(milliseconds: 300),
                 child: Card(
                   elevation: 4,
-                  child: Image.asset(
-                    height: size,
-                    _questions[index],
-                    fit: BoxFit.fitWidth,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      _questions[index],
+                      height: size,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -291,9 +292,9 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
               if (isMatched)
                 Positioned(
                   child: Image.asset(
-                    'assets/images/correct_icon.png', // Path to the correct match image
-                    width: 200, // Adjust the size of the overlay image
-                    height: 200,
+                    'assets/images/correct_icon.png',
+                    width: 100, // Adjusted size of overlay image
+                    height: 100,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -304,33 +305,29 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
     );
   }
 
-
-
-
-
   Widget _buildAnswer(int index) {
     final bool isSelected = _answerSelected[index];
     final bool isMatched = _answerMatched[index];
-    final bool isIncorrect = _answerMatched[index] == false && _answerSelected[index]; // Incorrect match check
+    final bool isIncorrect = !isMatched && isSelected; // Simplified incorrect match check
     final double size = isSelected ? 180 : 170; // Increase size when selected
 
     // Set background color: Green for correct, Red for incorrect, Transparent otherwise
-    final color = isMatched
+    final Color backgroundColor = isMatched
         ? Colors.green
         : (isIncorrect ? Colors.red : Colors.transparent);
 
     return GestureDetector(
       onTap: () => _onSelectAnswer(index),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32),
+        padding: const EdgeInsets.symmetric(vertical: 16), // Reduced padding for consistency
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color: color, // Red or Green for incorrect or correct matches
-            borderRadius: BorderRadius.circular(8),
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(12), // Slightly more rounded corners
           ),
           child: Stack(
             alignment: Alignment.center,
@@ -344,7 +341,10 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
                   child: Center(
                     child: Text(
                       _answers[index],
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -354,9 +354,9 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
               if (isMatched)
                 Positioned(
                   child: Image.asset(
-                    'assets/images/correct_icon.png', // Path to the correct match image
-                    width: 200, // Adjust the size of the overlay image
-                    height: 200,
+                    'assets/images/correct_icon.png',
+                    width: 100, // Adjusted size of overlay image
+                    height: 100,
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -366,10 +366,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
       ),
     );
   }
-
-
-
-
 
   Widget _buildGameBoard() {
     return Expanded(
@@ -397,7 +393,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
 
   Widget _buildScore() {
     return Positioned(
-      top: 225,
+      top: 0,
       left: 20,
       right: 20,
       child: Padding(
@@ -446,9 +442,10 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
                   fit: BoxFit.fill),
             ),
           ),
+          _buildScore(),
           Column(
             children: [
-              _buildScore(),
+              SizedBox(height: 32,),
               _buildGameBoard(),
             ],
           ),
