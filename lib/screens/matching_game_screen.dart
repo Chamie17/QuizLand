@@ -15,8 +15,6 @@ class MatchingGameScreen extends StatefulWidget {
 }
 
 class _MatchingGameScreenState extends State<MatchingGameScreen> {
-  List<String> _allQuestions = [];
-  List<String> _allAnswers = [];
   List<String> _questions = [];
   List<String> _answers = [];
   List<bool> _questionMatched = [];
@@ -27,11 +25,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
   List<bool> _answerSelected = [];
   List<String> _originalQuestions = [];
   List<String> _originalAnswers = [];
-  List<int> _usedQuestions = [];  // List to track used questions
   int _point = 0;
   int _minus = 0;
-  int _currentRound = 0; // Track the current round
-  final int _maxRounds = 7; // Maximum rounds
   final int _roundSize = 3; // Number of pairs per round
   int _roundsRemaining = 7; // Tracks remaining rounds
 
@@ -53,8 +48,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
           .toList();
 
       setState(() {
-        _allQuestions = List.from(images); // Preserve the original questions list
-        _allAnswers = List.from(answers); // Preserve the original answers list
         _originalQuestions = List.from(images); // Copy the original questions
         _originalAnswers = List.from(answers); // Copy the original answers
       });
@@ -143,11 +136,9 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
       _selectedQuestions.clear();
       _selectedAnswers.clear();
 
-      _currentRound++;
       _roundsRemaining--; // Decrease remaining rounds
     });
   }
-
 
 // Log the display counts when needed (for debugging)
   void _logQuestionDisplayCounts() {
@@ -277,7 +268,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
                 opacity: isMatched ? 0 : 1,
                 duration: const Duration(milliseconds: 300),
                 child: Card(
-                  elevation: 4,
+                  elevation: 10,
+                  shadowColor: Colors.black,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.asset(
@@ -337,7 +329,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
                 opacity: isMatched ? 0 : 1,
                 duration: const Duration(milliseconds: 300),
                 child: Card(
-                  elevation: 4,
+                  elevation: 10,
+                  shadowColor: Colors.black,
                   child: Center(
                     child: Text(
                       _answers[index],
@@ -436,11 +429,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
           SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: Opacity(
-              opacity: 0.7,
-              child: Image.asset("assets/images/bg_matching_game.png",
-                  fit: BoxFit.fill),
-            ),
+            child: Image.asset("assets/images/bg_matching_game.png",
+                fit: BoxFit.fill),
           ),
           _buildScore(),
           Column(

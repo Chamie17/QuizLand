@@ -50,6 +50,8 @@ dependencies:
   email_validator: ^3.0.0
   adaptive_dialog: ^2.2.1+2
   go_router: ^14.6.1
+  just_audio: ^0.9.42
+  vibration: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -98,6 +100,9 @@ flutter:
     - assets/matching_source/9/
     - assets/matching_source/10/
     - assets/arrange_source/
+    - assets/audio_source/audio_files.json
+    - assets/audio_source/1/
+    - assets/audio_source/
     - assets/images/
     - assets/lottiefiles/
     - assets/musics/

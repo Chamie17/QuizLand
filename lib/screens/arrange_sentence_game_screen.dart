@@ -159,12 +159,9 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
           SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: Opacity(
-              opacity: 0.7,
-              child: Image.asset(
-                "assets/images/bg_arrange.jpg",
-                fit: BoxFit.fill,
-              ),
+            child: Image.asset(
+              "assets/images/bg_arrange.jpg",
+              fit: BoxFit.fill,
             ),
           ),
 
@@ -219,7 +216,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
                 child: Center(
                   child: Wrap(
                     alignment: WrapAlignment.center,
-                    spacing: 8, // Space between items horizontally
+                    spacing: 4, // Space between items horizontally
                     runSpacing: 8, // Space between lines vertically
                     children: List.generate(selectedWords.length, (index) {
                       return GestureDetector(
@@ -227,12 +224,12 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
                         child: Container(
                           margin: const EdgeInsets.all(4),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
+                              horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black, width: 3),
-                            borderRadius: BorderRadius.circular(8),
+                            border: selectedWords[index] != null ? Border.all(color: Colors.transparent, width: 3) : BorderDirectional(bottom: BorderSide(color: Colors.black, width: 2)),
+                            borderRadius: selectedWords[index] != null ? BorderRadius.circular(8) : null,
                             color: selectedWords[index] != null
-                                ? Colors.blue[100]
+                                ? Colors.yellow[100]
                                 : Colors.transparent,
                           ),
                           child: Text(
@@ -260,17 +257,17 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
                           : null,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                            horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 3),
                           borderRadius: BorderRadius.circular(8),
                           color: shuffledWords[index] != ""
-                              ? Colors.green[100]
-                              : Colors.grey[300],
+                              ? Colors.yellow[100]
+                              : Colors.white,
                         ),
                         child: Text(
                           shuffledWords[index],
-                          style: const TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                     );
@@ -280,7 +277,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
 
               // Check Answer Button
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Color(0xFFfe68b2)),
                   onPressed: handleCheckAnswer,

@@ -24,39 +24,39 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return HomeBody();
   }
 
-  final AudioPlayer player = AudioPlayer();
+  // final AudioPlayer player = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
-
-    player.setReleaseMode(ReleaseMode.loop);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await player.setSource(AssetSource('musics/bg_music.mp3'));
-      await player.resume();
-    });
-
-    WidgetsBinding.instance.addObserver(this);
+    //
+    // player.setReleaseMode(ReleaseMode.loop);
+    //
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   await player.setSource(AssetSource('musics/bg_music.mp3'));
+    //   await player.resume();
+    // });
+    //
+    // WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    player.dispose();
+    // WidgetsBinding.instance.removeObserver(this);
+    // player.dispose();
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.paused) {
-      player.pause();
-    } else if (state == AppLifecycleState.resumed) {
-      player.resume();
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   super.didChangeAppLifecycleState(state);
+  //
+  //   if (state == AppLifecycleState.paused) {
+  //     player.pause();
+  //   } else if (state == AppLifecycleState.resumed) {
+  //     player.resume();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

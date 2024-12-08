@@ -1,0 +1,46 @@
+[
+  {
+    "question": "Đây là gì? - Đó là một khuôn mặt.",
+    "answer": "What's this? - It's a face."
+  },
+  {
+    "question": "Đó là một cái mũi.",
+    "answer": "It's a nose."
+  },
+  {
+    "question": "Đó là một con mắt.",
+    "answer": "It's an eye."
+  },
+  {
+    "question": "Đó là một cái tai.",
+    "answer": "It's an ear."
+  },
+  {
+    "question": "Kia là gì? - Đó là một cái tay.",
+    "answer": "What's that? - It's a hand."
+  },
+  {
+    "question": "Hãy chạm vào cái mũi của bạn!",
+    "answer": "Touch your nose!"
+  },
+  {
+    "question": "Hãy chạm vào cái miệng của bạn!",
+    "answer": "Touch your mouth!"
+  },
+  {
+    "question": "Hãy chạm vào tóc của bạn!",
+    "answer": "Touch your hair!"
+  },
+  {
+    "question": "Hãy mở đôi mắt của bạn ra!",
+    "answer": "Open your eyes!"
+  },
+  {
+    "question": "Hãy chạm vào đôi tai của bạn!",
+    "answer": "Touch your ears!"
+  },
+  {
+    "question": "Mời các em mở sách ra!",
+    "answer": "Open the book, please!"
+  }
+]
