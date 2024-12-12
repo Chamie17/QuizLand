@@ -1,11 +1,60 @@
 {
   "1": [
-    "chào tạm biệt.mp3",
-    "khoẻ.mp3",
-    "xin chào.mp3",
-    "như thế nào.mp3",
-    "tôi.mp3",
-    "cảm ơn.mp3",
-    "bạn.mp3"
+    "bye.mp3",
+    "fine.mp3",
+    "hello.mp3",
+    "goodbye.mp3",
+    "how.mp3",
+    "I.mp3",
+    "thank you.mp3",
+    "you.mp3",
+    "hi.mp3"
+  ],
+  "2": [
+    "eight.mp3",
+    "five.mp3",
+    "four.mp3",
+    "name.mp3",
+    "my.mp3",
+    "one.mp3",
+    "seven.mp3",
+    "six.mp3",
+    "ten.mp3",
+    "what.mp3",
+    "three.mp3",
+    "your.mp3",
+    "two.mp3",
+    "nine.mp3"
+  ],
+  "3": [
+    "Mr.mp3",
+    "no.mp3",
+    "friend.mp3",
+    "Ms.mp3",
+    "that.mp3",
+    "teacher.mp3",
+    "this.mp3",
+    "yes.mp3"
+  ],
+  "4": [
+    "eye.mp3",
+    "ear.mp3",
+    "face.mp3",
+    "hand.mp3",
+    "hair.mp3",
+    "nose.mp3",
+    "open.mp3",
+    "mouth.mp3",
+    "touch.mp3"
+  ],
+  "5": [
+    "dance.mp3",
+    "run.mp3",
+    "paint.mp3",
+    "draw.mp3",
+    "swim.mp3",
+    "walk.mp3",
+    "cook.mp3",
+    "sing.mp3"
   ]
 }

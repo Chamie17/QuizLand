@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vibration/vibration.dart'; // Import the vibration package
 import 'dart:math'; // For random selection
 
@@ -100,7 +103,23 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
     loadNextRound();
   }
 
-  void loadNextRound() {
+  Future<String?> getAudioTitle(String fileName) async {
+    final assetPath = 'assets/audio_source/${widget.level}/$fileName';
+    final byteData = await rootBundle.load(assetPath);
+
+    // Get a temporary directory
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File('${tempDir.path}/$fileName');
+
+    // Write the asset content to a temporary file
+    await tempFile.writeAsBytes(byteData.buffer.asUint8List());
+
+    // Read metadata and return title
+    final metadata = await readMetadata(tempFile, getImage: false);
+    return metadata.title;
+  }
+
+  Future<void> loadNextRound() async {
     if (roundsRemaining <= 0) {
       // No more rounds left
       showDialog(
@@ -142,13 +161,22 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
       currentRoundFiles = _getRandomItems(3, files.length);
     }
 
-    // Shuffle the answers (correct answers)
-    currentRoundAnswers = currentRoundFiles.map((file) => audioTitles[file]!).toList();
-    currentRoundAnswers.shuffle(); // Shuffle answers
+    // Fetch metadata titles for the current round files
+    currentRoundAnswers = [];
+    for (var file in currentRoundFiles) {
+      final title = await getAudioTitle(file); // Fetch metadata title
+      if (title != null) {
+        currentRoundAnswers.add(title); // Add title to answers
+      }
+    }
+
+    // Shuffle the answers to make them unpredictable
+    currentRoundAnswers.shuffle();
 
     setState(() {});
     roundsRemaining--; // Decrease remaining rounds
   }
+
 
   List<String> _getRandomItems(int count, int maxIndex) {
     final random = Random();
@@ -178,7 +206,10 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
       selectedAnswer = selectedAnswerText; // Set the selected answer
     });
 
-    if (selectedAnswer == audioTitles[selectedAudioFile!]) {
+    // Extract the correct metadata title dynamically
+    final correctTitle = await getAudioTitle(selectedAudioFile!);
+
+    if (selectedAnswer == correctTitle) {
       // Correct answer
       setState(() {
         correctAnswers++; // Increment correct answers count
@@ -192,7 +223,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
       // Stop the audio immediately after selecting the correct answer
       await _audioPlayer.stop();
 
-      // If 3 answers have been completed, move to the next round
+      // If the current round is complete, move to the next round
       if (answeredPairs.length % _roundSize == 0) {
         loadNextRound();
       }
@@ -218,6 +249,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -323,12 +355,12 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                               child: Container(
                                 padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.orange,
+                                  color: Color(0xFFF8E3A1),
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
                                     color: selectedAudioFile == currentRoundFiles[index]
                                         ? Colors.green // Green border for selected audio item
-                                        : Colors.transparent,
+                                        : Colors.orange,
                                     width: 3,
                                   ),
                                 ),
@@ -377,12 +409,12 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                               child: Container(
                                 padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.orange,
+                                  color: Color(0xFFF8E3A1),
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
                                     color: selectedAnswer == currentRoundAnswers[index]
                                         ? Colors.green // Green border for selected answer
-                                        : Colors.transparent,
+                                        : Colors.orange,
                                     width: 3,
                                   ),
                                 ),
@@ -417,18 +449,42 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
             ),
           Positioned(
             left: 20,
-            child: Text(
-              'Correct: $correctAnswers',
-              style: TextStyle(
-                  fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.black)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Correct: $correctAnswers',
+                    style: TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold, ),
+                  ),
+                ),
+              ),
             ),
           ),
           Positioned(
             right: 20,
-            child: Text(
-              'Incorrect: $incorrectAnswers',
-              style: TextStyle(
-                  fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.black)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Incorrect: $incorrectAnswers',
+                    style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ),
           ),
         ],

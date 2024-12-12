@@ -99,18 +99,23 @@ class _HomeBodyState extends State<HomeBody>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "Nha am nhac",
+                          "Nhà âm nhạc",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              fontSize: 20.0
+                              fontSize: 36.0
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0),
-                          child: Text("huong dan cua nha am nhac",
+                          child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
+                              "•	Nhấp chọn nghe các âm thanh.\n\n"
+                              "•	Chọn từ đúng với nghĩa của âm thanh đó.\n\n"
+                              "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
                             style: TextStyle(
-                                color: Colors.white
+                              fontSize: 24,
+                                color: Colors.white,
+                              fontStyle: FontStyle.italic,
                             ),),
                         )
                       ],
@@ -134,18 +139,23 @@ class _HomeBodyState extends State<HomeBody>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "Nha tu vung",
+                          "Nhà từ vựng",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              fontSize: 20.0
+                              fontSize: 36.0
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0),
-                          child: Text("huong dan cua nha tu vung",
+                          child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
+                              "•	Nhấp chọn nghe âm thanh.\n\n"
+                              "•	Sắp xếp các mảnh chữ cái thành từ vựng mà bạn nghe được.\n\n"
+                              "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
                             style: TextStyle(
-                                color: Colors.white
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontStyle: FontStyle.italic,
                             ),),
                         )
                       ],
@@ -163,25 +173,31 @@ class _HomeBodyState extends State<HomeBody>
             keyTarget: _keyCommunicate,
             contents: [
               TargetContent(
-                  align: ContentAlign.right,
+                  align: ContentAlign.custom,
+                  customPosition: CustomTargetContentPosition(top: 0, right: 0, left: 200),
                   child: Container(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "Nha giao tiep",
+                          "Nhà giao tiếp",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              fontSize: 20.0
+                              fontSize: 36.0
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0),
-                          child: Text("huong dan cua nha giao tiep",
+                          child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
+                              "•	Đọc câu tiếng việt được cung cấp.\n\n"
+                              "•	Sắp xếp các mảnh từ bên dưới thành 1 câu tiếng anh đúng nghĩa và ngữ pháp.\n\n"
+                              "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
                             style: TextStyle(
-                                color: Colors.white
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontStyle: FontStyle.italic,
                             ),),
                         )
                       ],
@@ -198,25 +214,30 @@ class _HomeBodyState extends State<HomeBody>
             keyTarget: _keyConnect,
             contents: [
               TargetContent(
-                  align: ContentAlign.right,
+                customPosition: CustomTargetContentPosition(top: 50),
+                  align: ContentAlign.custom,
                   child: Container(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "Nha ket noi",
+                          "Nhà kết nối",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              fontSize: 20.0
+                              fontSize: 36.0
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0),
-                          child: Text("huong dan cua nha ket noi",
+                          child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
+                              "•	Ghép nối các hình ảnh với từ vựng tiếng anh của nó.\n\n"
+                              "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
                             style: TextStyle(
-                                color: Colors.white
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontStyle: FontStyle.italic,
                             ),),
                         )
                       ],
@@ -235,7 +256,7 @@ class _HomeBodyState extends State<HomeBody>
       targets: targets, // List<TargetFocus>
       colorShadow: Colors.black, // DEFAULT Colors.black
       // alignSkip: Alignment.bottomRight,
-      // textSkip: "SKIP",
+      textSkip: "Bỏ qua",
       // paddingFocus: 10,
       // opacityShadow: 0.8,
       onClickTarget: (target){
@@ -449,8 +470,8 @@ class _HomeBodyState extends State<HomeBody>
             ),
 
             Positioned(
-              right: -20,
-              bottom: 220,
+              right: 20,
+              bottom: 270,
               child: AnimatedBuilder(
                 animation: _musicAnimation,
                 builder: (context, child) {
@@ -463,29 +484,13 @@ class _HomeBodyState extends State<HomeBody>
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         child: SizedBox(
-                          height: 250,
+                          height: 220,
                           child: Image.asset('assets/images/monkey.png'),
                         ),
                       ),
                     ),
                   );
                 },
-              ),
-            ),
-
-            Positioned(
-              right: 20,
-              bottom: 360,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: showTutorial,
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  child: SizedBox(
-                    height: 120,
-                      child: Image.asset('assets/images/guide_bubble.png')),
-                ),
               ),
             ),
 

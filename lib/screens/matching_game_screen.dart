@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 import 'package:quizland_app/services/question_service.dart';
 import '../utils/matching_level.dart';
 
@@ -14,7 +15,11 @@ class MatchingGameScreen extends StatefulWidget {
   State<MatchingGameScreen> createState() => _MatchingGameScreenState();
 }
 
-class _MatchingGameScreenState extends State<MatchingGameScreen> {
+class _MatchingGameScreenState extends State<MatchingGameScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller_worm;
+  late Animation<double> _animation_worm;
+
   List<String> _questions = [];
   List<String> _answers = [];
   List<bool> _questionMatched = [];
@@ -37,7 +42,32 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
     init();
   }
 
+  @override
+  void dispose() {
+    _controller_worm.dispose();
+    super.dispose();
+  }
+
   void init() async {
+
+    // Initialize the AnimationController
+    _controller_worm = AnimationController(
+      duration: Duration(seconds: 8), // Animation duration
+      vsync: this,
+    );
+
+    // Define the animation from screen width to -100 (off-screen)
+    _animation_worm = Tween<double>(
+      begin: -100,
+      end: 400, // Moving off-screen to the left
+    ).animate(CurvedAnimation(
+      parent: _controller_worm,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start the animation
+    _controller_worm.repeat();
+
     if (matchingLevel.containsKey(widget.level)) {
       final folderPath = 'assets/matching_source/${widget.level}/';
       final List<String> images = matchingLevel[widget.level]!.map((e) => folderPath + e).toList();
@@ -394,28 +424,50 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Correct: $_point',
-              style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.black)
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Correct: $_point',
+                  style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
               ),
             ),
-            Text(
-              'Incorrect: $_minus',
-              style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold
+
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.black)
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Incorrect: $_minus',
+                  style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
               ),
             ),
+
+
           ],
         ),
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -432,10 +484,25 @@ class _MatchingGameScreenState extends State<MatchingGameScreen> {
             child: Image.asset("assets/images/bg_matching_game.png",
                 fit: BoxFit.fill),
           ),
+
+          AnimatedBuilder(
+            animation: _animation_worm,
+            builder: (context, child) {
+              return Positioned(
+                left: _animation_worm.value,
+                bottom: 40,
+                child: SizedBox(
+                  height: 100,
+                  child: Lottie.asset('assets/lottiefiles/worm.json'),
+                ),
+              );
+            },
+          ),
+
           _buildScore(),
           Column(
             children: [
-              SizedBox(height: 32,),
+              SizedBox(height: 64,),
               _buildGameBoard(),
             ],
           ),

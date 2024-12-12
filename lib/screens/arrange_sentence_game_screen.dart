@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 
 import '../models/question_answer.dart';
 
@@ -167,7 +168,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
 
 
           Positioned(
-              top: 20,
+              top: 60,
               child: SizedBox(
                   height: 200,
                   width: MediaQuery.of(context).size.width,
@@ -177,26 +178,71 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
                   ))),
 
           Positioned(
-            top: 225,
+              top: 200,
+              child: SizedBox(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  child: Lottie.asset(
+                    "assets/lottiefiles/santa.json",
+                    fit: BoxFit.fill,
+                  ))),
+
+          Positioned(
+              right: -100,
+              bottom: 120,
+              child: SizedBox(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  child: Lottie.asset(
+                    "assets/lottiefiles/snowman.json",
+                    fit: BoxFit.fitHeight,
+                  ))),
+
+          Positioned(
             left: 20,
-            child: Text(
-              'Correct: $correctAnswers',
-              style: TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.black)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Correct: $correctAnswers',
+                    style: TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold, ),
+                  ),
+                ),
+              ),
             ),
           ),
           Positioned(
-            top: 225,
             right: 20,
-            child: Text(
-              'Incorrect: $incorrectAnswers',
-              style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.black)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Incorrect: $incorrectAnswers',
+                    style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ),
           ),
           // Main Content
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 100, right: 32, left: 32),
+                padding: const EdgeInsets.only(top: 140, right: 32, left: 32),
                 child: SizedBox(
                   width: double.maxFinite,
                   child: Center(
