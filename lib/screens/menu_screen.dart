@@ -58,11 +58,11 @@ class _MenuScreenState extends State<MenuScreen>
             switch (widget.gameName) {
               case 'matching':
                 return MatchingGameScreen(level: level);
-              case 'music':
+              case 'listen':
                 return ListeningGameScreen(level: level);
-              case 'word':
+              case 'wordInput':
                 return WordInputGameScreen(level: level);
-              case 'communicate':
+              case 'arrangeSentence':
                 return ArrangeSentenceGameScreen(level: level);
               default:
                 return MatchingGameScreen(level: level);
@@ -92,11 +92,11 @@ class _MenuScreenState extends State<MenuScreen>
               child: Lottie.asset('assets/lottiefiles/monkey_top.json',
                   height: 220)),
           const Positioned(
-              left: 70,
-              top: 60,
+              left: 65,
+              top: 85,
               child: Text(
-                "Units",
-                style: TextStyle(fontSize: 100, fontFamily: 'Kablammo'),
+                "Levels",
+                style: TextStyle(fontSize: 90, fontFamily: 'Kablammo'),
               )),
           Positioned(
               left: -50,

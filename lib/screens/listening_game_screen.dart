@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:vibration/vibration.dart'; // Import the vibration package
@@ -119,30 +121,52 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
     return metadata.title;
   }
 
+  void resetGame() {
+    setState(() {
+      // Reset the round counter
+      roundsRemaining = 7;
+
+      // Reset the correct and incorrect answer counters
+      correctAnswers = 0;
+      incorrectAnswers = 0;
+
+      // Clear the list of answered pairs
+      answeredPairs.clear();
+
+      // Reset the current round files and answers
+      currentRoundFiles.clear();
+      currentRoundAnswers.clear();
+
+      // Reset selected audio and selected answer
+      selectedAudioFile = null;
+      selectedAnswer = null;
+
+      // Reset incorrect state (error image visibility)
+      isIncorrect = false;
+
+      // Reload the game by initializing the round again
+      loadNextRound();
+    });
+  }
+
+
   Future<void> loadNextRound() async {
     if (roundsRemaining <= 0) {
       // No more rounds left
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Game Over!"),
-          content: Text("You have completed all rounds."),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                setState(() {
-                  answeredPairs.clear(); // Reset answered pairs
-                  roundsRemaining = 7; // Reset rounds count
-                  files.shuffle(); // Shuffle the files for new game
-                });
-                loadNextRound();
-              },
-              child: Text("Restart"),
-            ),
-          ],
-        ),
-      );
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      bool? isReplay = await context.pushNamed('result', pathParameters: {
+        'uid': uid,
+        'game': 'listen',
+        'level': widget.level.toString(),
+        'correct': correctAnswers.toString(),
+        'incorrect': incorrectAnswers.toString()
+      });
+
+      if (isReplay ?? false) {
+        resetGame();
+      }
+
       return;
     }
 
@@ -460,7 +484,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Correct: $correctAnswers',
+                    'Đúng: $correctAnswers',
                     style: TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold, ),
                   ),
                 ),
@@ -480,7 +504,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Incorrect: $incorrectAnswers',
+                    'Sai: $incorrectAnswers',
                     style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
                   ),
                 ),

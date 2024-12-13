@@ -109,6 +109,7 @@ flutter:
     - assets/audio_source/5/
     - assets/audio_source/
     - assets/images/
+    - assets/images/result_asset/
     - assets/lottiefiles/
     - assets/musics/
 

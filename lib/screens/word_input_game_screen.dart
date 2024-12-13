@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration.dart';
 
@@ -51,25 +53,42 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
     }
   }
 
-  void loadNextAudio() {
+  void resetGame() {
+    setState(() {
+      // Reset the game state variables
+      correctAnswers = 0;
+      incorrectAnswers = 0;
+      errorOccurred = false;
+      selectedLetters.clear();
+      shuffledLetters.clear();
+
+      // Reload the files and titles
+      files = [];
+      audioTitles.clear();
+
+      // Reinitialize the game by loading audio files and selecting the first one
+      init();
+    });
+  }
+
+
+  void loadNextAudio() async{
     if (files.isEmpty) {
       // Show completion dialog when no files remain
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Chúc mừng!"),
-          content: const Text("Bạn đã hoàn thành trò chơi!"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      bool? isReplay = await context.pushNamed('result', pathParameters: {
+        'uid': uid,
+        'game': 'wordInput',
+        'level': widget.level.toString(),
+        'correct': correctAnswers.toString(),
+        'incorrect': incorrectAnswers.toString()
+      });
+
+      if (isReplay ?? false) {
+        resetGame();
+      }
+
       return;
     }
 
@@ -178,7 +197,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Correct: $correctAnswers',
+                    'Đúng: $correctAnswers',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.green,
@@ -201,7 +220,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Incorrect: $incorrectAnswers',
+                    'Sai: $incorrectAnswers',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.red,

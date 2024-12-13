@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:vibration/vibration.dart';
 
 import '../models/question_answer.dart';
 
@@ -56,10 +59,14 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     });
   }
 
-  void triggerWarningEffect() {
+  void triggerWarningEffect() async{
     setState(() {
       showWarning = true;
     });
+
+    if (await Vibration.hasVibrator() ?? false) {
+    Vibration.vibrate(duration: 500); // Vibrate for 500 milliseconds
+    }
 
     Future.delayed(const Duration(milliseconds: 300), () {
       setState(() {
@@ -104,7 +111,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     return userAnswer == questionAnswers[currentQuestionIndex].answer.trim();
   }
 
-  void goToNextQuestion() {
+  void goToNextQuestion() async{
     if (currentQuestionIndex < questionAnswers.length - 1) {
       setState(() {
         currentQuestionIndex++;
@@ -112,19 +119,29 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
       });
     } else {
       // End of the game
-      showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-                title: const Text("Congratulations!"),
-                content: const Text("You have completed all questions."),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("OK"),
-                  ),
-                ],
-              ));
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      bool? isReplay = await context.pushNamed('result', pathParameters: {
+        'uid': uid,
+        'game': 'arrangeSentence',
+        'level': widget.level.toString(),
+        'correct': correctAnswers.toString(),
+        'incorrect': incorrectAnswers.toString()
+      });
+
+      if (isReplay ?? false) {
+        resetGame();
+      }
     }
+  }
+
+  void resetGame() {
+    setState(() {
+      correctAnswers = 0;
+      incorrectAnswers = 0;
+      currentQuestionIndex = 0;
+      initializeGame();
+    });
   }
 
   void handleCheckAnswer() {
@@ -211,7 +228,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Correct: $correctAnswers',
+                    'Đúng: $correctAnswers',
                     style: TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold, ),
                   ),
                 ),
@@ -231,7 +248,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Incorrect: $incorrectAnswers',
+                    'Sai: $incorrectAnswers',
                     style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
                   ),
                 ),

@@ -285,15 +285,15 @@ class _HomeBodyState extends State<HomeBody>
   }
 
   void _goToCommunicateScreen() async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF80b2b3), boxColor: Color(0xFFc56980), gameName: 'communicate',),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF80b2b3), boxColor: Color(0xFFc56980), gameName: 'arrangeSentence',),));
   }
 
   void _goToWordScreen() async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFc1a3ef), boxColor: Color(0xFFefa13e), gameName: 'word',),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFc1a3ef), boxColor: Color(0xFFefa13e), gameName: 'wordInput',),));
   }
 
   void _goToMusicScreen() async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF75cde8), boxColor: Color(0xFFf5f05e), gameName: 'music',),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF75cde8), boxColor: Color(0xFFf5f05e), gameName: 'listen',),));
   }
 
   @override
@@ -471,7 +471,7 @@ class _HomeBodyState extends State<HomeBody>
 
             Positioned(
               right: 20,
-              bottom: 270,
+              bottom: 290,
               child: AnimatedBuilder(
                 animation: _musicAnimation,
                 builder: (context, child) {
@@ -484,7 +484,7 @@ class _HomeBodyState extends State<HomeBody>
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         child: SizedBox(
-                          height: 220,
+                          height: 180,
                           child: Image.asset('assets/images/monkey.png'),
                         ),
                       ),

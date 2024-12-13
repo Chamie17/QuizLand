@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:quizland_app/screens/welcome_screen.dart';
 import 'package:quizland_app/services/question_service.dart';
+import 'package:vibration/vibration.dart';
 import '../utils/matching_level.dart';
 
 class MatchingGameScreen extends StatefulWidget {
@@ -19,6 +23,9 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller_worm;
   late Animation<double> _animation_worm;
+  bool _showIncorrectImage = false;
+
+
 
   List<String> _questions = [];
   List<String> _answers = [];
@@ -35,7 +42,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   final int _roundSize = 3; // Number of pairs per round
   int _roundsRemaining = 7; // Tracks remaining rounds
 
-
   @override
   void initState() {
     super.initState();
@@ -49,7 +55,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   }
 
   void init() async {
-
     // Initialize the AnimationController
     _controller_worm = AnimationController(
       duration: Duration(seconds: 8), // Animation duration
@@ -70,7 +75,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
 
     if (matchingLevel.containsKey(widget.level)) {
       final folderPath = 'assets/matching_source/${widget.level}/';
-      final List<String> images = matchingLevel[widget.level]!.map((e) => folderPath + e).toList();
+      final List<String> images =
+          matchingLevel[widget.level]!.map((e) => folderPath + e).toList();
 
       // Extract base names (without extensions) for answers
       final List<String> answers = images
@@ -109,7 +115,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       Set<int> selectedIndices = Set<int>();
 
       // List to track used questions in previous rounds
-      List<int> unusedQuestions = List<int>.generate(_originalQuestions.length, (index) => index);
+      List<int> unusedQuestions =
+          List<int>.generate(_originalQuestions.length, (index) => index);
 
       // First, shuffle the questions to get random selection
       unusedQuestions.shuffle(random);
@@ -123,14 +130,16 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
           int randomIndex = unusedQuestions[j];
 
           // Check if the question has been displayed less than twice
-          if ((questionDisplayCount[_originalQuestions[randomIndex]] ?? 0) < 2) {
+          if ((questionDisplayCount[_originalQuestions[randomIndex]] ?? 0) <
+              2) {
             roundQuestions.add(_originalQuestions[randomIndex]);
             roundAnswers.add(_originalAnswers[randomIndex]);
-            selectedIndices.add(randomIndex);  // Mark as selected
+            selectedIndices.add(randomIndex); // Mark as selected
 
             // Update the display count
             questionDisplayCount[_originalQuestions[randomIndex]] =
-                (questionDisplayCount[_originalQuestions[randomIndex]] ?? 0) + 1;
+                (questionDisplayCount[_originalQuestions[randomIndex]] ?? 0) +
+                    1;
 
             questionSelected = true;
             unusedQuestions.removeAt(j); // Remove the question from unused pool
@@ -140,10 +149,11 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
 
         // If no question with less than 2 displays is available, use any question
         if (!questionSelected && unusedQuestions.isNotEmpty) {
-          int randomIndex = unusedQuestions.removeLast();  // Select any remaining question
+          int randomIndex =
+              unusedQuestions.removeLast(); // Select any remaining question
           roundQuestions.add(_originalQuestions[randomIndex]);
           roundAnswers.add(_originalAnswers[randomIndex]);
-          selectedIndices.add(randomIndex);  // Mark as selected
+          selectedIndices.add(randomIndex); // Mark as selected
 
           // Update the display count
           questionDisplayCount[_originalQuestions[randomIndex]] =
@@ -176,24 +186,46 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       print('Question: $question displayed $count times');
     });
   }
-  void _showCompletionDialog() {
+
+  void resetGame() {
+    setState(() {
+      // Reset scores
+      _point = 0;
+      _minus = 0;
+
+      // Reset rounds remaining
+      _roundsRemaining = 7;
+
+      // Reset the selected state for questions and answers
+      _selectedQuestions.clear();
+      _selectedAnswers.clear();
+      _questionMatched = [];
+      _answerMatched = [];
+      _questionSelected = [];
+      _answerSelected = [];
+
+      // Reload the next round with fresh state
+      _loadNextRound();
+    });
+  }
+
+
+  void _showCompletionDialog() async{
     _logQuestionDisplayCounts();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Game Completed'),
-        content: Text('Bạn nhận $_point trái chuối và  sai $_minus lần!'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop(); // Exit the game screen
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
+
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+
+    bool? isReplay = await context.pushNamed('result', pathParameters: {
+      'uid': uid,
+      'game': 'matching',
+      'level': widget.level.toString(),
+      'correct': _point.toString(),
+      'incorrect': _minus.toString()
+    });
+
+    if (isReplay ?? false) {
+      resetGame();
+    }
   }
 
   void _onSelectQuestion(int index) {
@@ -218,7 +250,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     _checkMatch();
   }
 
-  void _checkMatch() {
+  void _checkMatch() async {
     if (_selectedQuestions.isNotEmpty && _selectedAnswers.isNotEmpty) {
       final question = _selectedQuestions.last;
       final answer = _selectedAnswers.last;
@@ -234,9 +266,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
           _selectedAnswers.clear();
         });
 
-        // Wait for the visual effect before proceeding
         Future.delayed(const Duration(milliseconds: 600), () {
-          // Check if the round is complete
           if (_questionMatched.every((matched) => matched)) {
             _loadNextRound();
           }
@@ -244,17 +274,26 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       } else {
         setState(() {
           _minus++;
-          // Trigger the red effect for incorrect match
           final questionIndex = _questions.indexOf(question);
           final answerIndex = _answers.indexOf(answer);
           _questionMatched[questionIndex] = false;
           _answerMatched[answerIndex] = false;
+          _showIncorrectImage = true; // Show the incorrect image
         });
 
-        // Show red effect and then reset after 1 second
+        if (await Vibration.hasVibrator() ?? false) {
+          Vibration.vibrate(duration: 500); // Vibrate for 500 milliseconds
+        }
+
+        // Reset the image visibility after 1 second
+        Future.delayed(const Duration(seconds: 1), () {
+          setState(() {
+            _showIncorrectImage = false; // Hide the incorrect image
+          });
+        });
+
         Future.delayed(const Duration(milliseconds: 1000), () {
           setState(() {
-            // Reset the selection and color after the red effect
             _questionSelected = List<bool>.filled(_questions.length, false);
             _answerSelected = List<bool>.filled(_answers.length, false);
           });
@@ -266,10 +305,13 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     }
   }
 
+
+
   Widget _buildQuestion(int index) {
     final bool isSelected = _questionSelected[index];
     final bool isMatched = _questionMatched[index];
-    final bool isIncorrect = !isMatched && isSelected; // Simplified incorrect match check
+    final bool isIncorrect =
+        !isMatched && isSelected; // Simplified incorrect match check
     final double size = isSelected ? 180 : 170; // Increase size when selected
 
     // Set background color: Green for correct, Red for incorrect, Transparent otherwise
@@ -280,7 +322,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     return GestureDetector(
       onTap: () => _onSelectQuestion(index),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16), // Reduced padding for balance
+        padding: const EdgeInsets.symmetric(
+            vertical: 16), // Reduced padding for balance
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
@@ -288,7 +331,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
           height: size,
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(12), // Slightly more rounded corners
+            borderRadius:
+                BorderRadius.circular(12), // Slightly more rounded corners
           ),
           child: Stack(
             alignment: Alignment.center,
@@ -330,7 +374,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   Widget _buildAnswer(int index) {
     final bool isSelected = _answerSelected[index];
     final bool isMatched = _answerMatched[index];
-    final bool isIncorrect = !isMatched && isSelected; // Simplified incorrect match check
+    final bool isIncorrect =
+        !isMatched && isSelected; // Simplified incorrect match check
     final double size = isSelected ? 180 : 170; // Increase size when selected
 
     // Set background color: Green for correct, Red for incorrect, Transparent otherwise
@@ -341,7 +386,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     return GestureDetector(
       onTap: () => _onSelectAnswer(index),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16), // Reduced padding for consistency
+        padding: const EdgeInsets.symmetric(
+            vertical: 16), // Reduced padding for consistency
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
@@ -349,7 +395,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
           height: size,
           decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(12), // Slightly more rounded corners
+            borderRadius:
+                BorderRadius.circular(12), // Slightly more rounded corners
           ),
           child: Stack(
             alignment: Alignment.center,
@@ -428,41 +475,34 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
               decoration: BoxDecoration(
                   color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.black)
-              ),
+                  border: Border.all(color: Colors.black)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Correct: $_point',
+                  'Đúng: $_point',
                   style: const TextStyle(
                       fontSize: 20,
                       color: Colors.green,
-                      fontWeight: FontWeight.bold
-                  ),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
-
             Container(
               decoration: BoxDecoration(
                   color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.black)
-              ),
+                  border: Border.all(color: Colors.black)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Incorrect: $_minus',
+                  'Sai: $_minus',
                   style: const TextStyle(
                       fontSize: 20,
                       color: Colors.red,
-                      fontWeight: FontWeight.bold
-                  ),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
-
-
           ],
         ),
       ),
@@ -484,35 +524,31 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
             child: Image.asset("assets/images/bg_matching_game.png",
                 fit: BoxFit.fill),
           ),
-
-          AnimatedBuilder(
-            animation: _animation_worm,
-            builder: (context, child) {
-              return Positioned(
-                left: _animation_worm.value,
-                bottom: 40,
-                child: SizedBox(
-                  height: 100,
-                  child: Lottie.asset('assets/lottiefiles/worm.json'),
-                ),
-              );
-            },
+          Positioned(
+            bottom: 20,
+            right: 0,
+            left: 0,
+            child: Lottie.asset('assets/lottiefiles/ants.json'),
           ),
-
           _buildScore(),
           Column(
             children: [
-              SizedBox(height: 64,),
+              SizedBox(
+                height: 64,
+              ),
               _buildGameBoard(),
             ],
           ),
+
+          if (_showIncorrectImage)
+            Center(
+              child: Image.asset(
+                "assets/images/error.png",
+                width: 300,
+                height: 300,
+              ),
+            ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _loadNextRound(); // Skip current round
-        },
-        child: const Icon(Icons.skip_next),
       ),
     );
   }
