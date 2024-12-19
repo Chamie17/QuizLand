@@ -76,7 +76,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     if (matchingLevel.containsKey(widget.level)) {
       final folderPath = 'assets/matching_source/${widget.level}/';
       final List<String> images =
-          matchingLevel[widget.level]!.map((e) => folderPath + e).toList();
+      matchingLevel[widget.level]!.map((e) => folderPath + e).toList();
 
       // Extract base names (without extensions) for answers
       final List<String> answers = images
@@ -88,12 +88,30 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
         _originalAnswers = List.from(answers); // Copy the original answers
       });
 
+      // Initialize the display count for all questions
+      _initializeQuestionDisplayCount();
+
+      // Load the first round
       _loadNextRound();
+
+      // Update the display count for questions in the first round
+      for (String question in _questions) {
+        questionDisplayCount[question] =
+            (questionDisplayCount[question] ?? 0) + 1;
+      }
     }
   }
 
+
   // Add this to track the display count (already existing in your code)
   Map<String, int> questionDisplayCount = {};
+
+  void _initializeQuestionDisplayCount() {
+    // Initialize display count for all questions
+    for (String question in _originalQuestions) {
+      questionDisplayCount[question] = 0;
+    }
+  }
 
   void _loadNextRound() {
     if (_roundsRemaining <= 0) {
@@ -111,53 +129,39 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       List<String> roundQuestions = [];
       List<String> roundAnswers = [];
 
-      // List to track already selected questions
-      Set<int> selectedIndices = Set<int>();
+      // Copy the list of unused questions
+      List<String> unusedQuestions = List.from(_originalQuestions);
 
-      // List to track used questions in previous rounds
-      List<int> unusedQuestions =
-          List<int>.generate(_originalQuestions.length, (index) => index);
-
-      // First, shuffle the questions to get random selection
+      // Shuffle the questions to get random selection
       unusedQuestions.shuffle(random);
 
-      // Select questions ensuring each is shown at least twice
+      // Select questions ensuring each is shown at least once
       for (int i = 0; i < roundSize; i++) {
         bool questionSelected = false;
 
-        // Try to select a question that has been displayed less than twice
-        for (int j = 0; j < unusedQuestions.length; j++) {
-          int randomIndex = unusedQuestions[j];
-
-          // Check if the question has been displayed less than twice
-          if ((questionDisplayCount[_originalQuestions[randomIndex]] ?? 0) <
-              2) {
-            roundQuestions.add(_originalQuestions[randomIndex]);
-            roundAnswers.add(_originalAnswers[randomIndex]);
-            selectedIndices.add(randomIndex); // Mark as selected
+        // Try to select a question that has been displayed less than once
+        for (String question in unusedQuestions) {
+          if ((questionDisplayCount[question] ?? 0) < 1) {
+            roundQuestions.add(question);
+            roundAnswers.add(_originalAnswers[_originalQuestions.indexOf(question)]);
 
             // Update the display count
-            questionDisplayCount[_originalQuestions[randomIndex]] =
-                (questionDisplayCount[_originalQuestions[randomIndex]] ?? 0) +
-                    1;
+            questionDisplayCount[question] = (questionDisplayCount[question] ?? 0) + 1;
 
             questionSelected = true;
-            unusedQuestions.removeAt(j); // Remove the question from unused pool
+            unusedQuestions.remove(question); // Remove the question from unused pool
             break;
           }
         }
 
-        // If no question with less than 2 displays is available, use any question
+        // If no question with less than 1 display is available, use any question
         if (!questionSelected && unusedQuestions.isNotEmpty) {
-          int randomIndex =
-              unusedQuestions.removeLast(); // Select any remaining question
-          roundQuestions.add(_originalQuestions[randomIndex]);
-          roundAnswers.add(_originalAnswers[randomIndex]);
-          selectedIndices.add(randomIndex); // Mark as selected
+          String question = unusedQuestions.removeLast(); // Select any remaining question
+          roundQuestions.add(question);
+          roundAnswers.add(_originalAnswers[_originalQuestions.indexOf(question)]);
 
           // Update the display count
-          questionDisplayCount[_originalQuestions[randomIndex]] =
-              (questionDisplayCount[_originalQuestions[randomIndex]] ?? 0) + 1;
+          questionDisplayCount[question] = (questionDisplayCount[question] ?? 0) + 1;
         }
       }
 
@@ -179,6 +183,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       _roundsRemaining--; // Decrease remaining rounds
     });
   }
+
 
 // Log the display counts when needed (for debugging)
   void _logQuestionDisplayCounts() {
@@ -208,7 +213,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       _loadNextRound();
     });
   }
-
 
   void _showCompletionDialog() async{
     _logQuestionDisplayCounts();

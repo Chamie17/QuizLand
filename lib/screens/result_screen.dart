@@ -9,6 +9,7 @@ import 'package:quizland_app/services/user_profile_service.dart';
 
 import 'arrange_sentence_game_screen.dart';
 import 'listening_game_screen.dart';
+import 'menu_screen.dart';
 
 class ResultScreen extends StatefulWidget {
   ResultScreen(
@@ -60,9 +61,12 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   int getTotal() {
-    return widget.incorrect > widget.correct
+    int totalQuestion = widget.correct;
+    int total =  widget.incorrect > widget.correct
         ? 0
         : widget.correct - widget.incorrect;
+    double score = totalQuestion > 0 ? (total / totalQuestion) * 10 : 0;
+    return score.toInt();
   }
 
   int getStar() {
@@ -75,8 +79,8 @@ class _ResultScreenState extends State<ResultScreen> {
     if (incorrect == 0) return 3;
 
     double percent = total / correct;
-    if (percent > 0.7) return 2;
-    if (percent > 0.3) return 1;
+    if (percent > 0.5) return 2;
+    if (percent > 0) return 1;
     return 0;
   }
 
@@ -86,6 +90,35 @@ class _ResultScreenState extends State<ResultScreen> {
 
   void _handleReplay() async {
     Navigator.pop(context, true);
+  }
+
+  void _handleContinue() async {
+    switch (widget.game) {
+      case 'matching':
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            MenuScreen(backgroundColor: Color(0xFFd5c1a6),
+              boxColor: Colors.yellowAccent,
+              gameName: 'matching',),));
+        break;
+      case 'listen':
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            MenuScreen(backgroundColor: Color(0xFF75cde8),
+              boxColor: Color(0xFFf5f05e),
+              gameName: 'listen',),));
+        break;
+      case 'wordInput':
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            MenuScreen(backgroundColor: Color(0xFFc1a3ef),
+              boxColor: Color(0xFFefa13e),
+              gameName: 'wordInput',),));
+        break;
+      case 'arrangeSentence':
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            MenuScreen(backgroundColor: Color(0xFF80b2b3),
+              boxColor: Color(0xFFc56980),
+              gameName: 'arrangeSentence',),));
+        break;
+    }
   }
 
   @override
@@ -173,7 +206,7 @@ class _ResultScreenState extends State<ResultScreen> {
                             'assets/images/result_asset/home_button.png'),
                       )),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: _handleContinue,
                       icon: SizedBox(
                         height: 100,
                         child: Image.asset(

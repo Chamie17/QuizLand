@@ -1,9 +1,8 @@
-import 'package:audioplayers/audioplayers.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quizland_app/components/home_body.dart';
 import 'package:quizland_app/screens/setting_screen.dart';
+import '../services/audio_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,92 +13,106 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _currentIndex = 0;
-
-  Widget _handleScreen() {
-    if (_currentIndex == 0) {
-      return HomeBody();
-    } else if (_currentIndex == 3) {
-      return SettingScreen();
-    }
-    return HomeBody();
-  }
-
-  // final AudioPlayer player = AudioPlayer();
+  final AudioManager _audioManager = AudioManager();
+  bool isMusicPlaying = true;
+  bool isMute = false;
 
   @override
   void initState() {
     super.initState();
-    //
-    // player.setReleaseMode(ReleaseMode.loop);
-    //
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //   await player.setSource(AssetSource('musics/bg_music.mp3'));
-    //   await player.resume();
-    // });
-    //
-    // WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
+    _initAudioManager();
   }
 
   @override
   void dispose() {
-    // WidgetsBinding.instance.removeObserver(this);
-    // player.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    _audioManager.dispose();  // Ensure the AudioManager is disposed properly
     super.dispose();
   }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   super.didChangeAppLifecycleState(state);
-  //
-  //   if (state == AppLifecycleState.paused) {
-  //     player.pause();
-  //   } else if (state == AppLifecycleState.resumed) {
-  //     player.resume();
-  //   }
-  // }
+  Future<void> _initAudioManager() async {
+    await _audioManager.init();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
+      isMute = prefs.getBool('isMute') ?? false;
+    });
+
+    if (isMusicPlaying) {
+      await _audioManager.playMusic();
+    } else {
+      await _audioManager.stopMusic();
+    }
+  }
+
+  // Handle lifecycle changes (pause/resume)
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _audioManager.stopMusic();
+    } else if (state == AppLifecycleState.resumed) {
+      if (isMusicPlaying) {
+        _audioManager.playMusic();
+      }
+    }
+  }
+
+  // Handle screen selection
+  Widget _getSelectedScreen() {
+    switch (_currentIndex) {
+      case 0:
+        return const HomeBody();
+      case 3:
+        return const SettingScreen();
+      default:
+        return const HomeBody();
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _handleScreen(),
+      body: _getSelectedScreen(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-              icon: SizedBox(
-                height: 24,
-                child: Image.asset("assets/images/home_icon.png"),
-              ),
-
-              label: "Trang chủ"),
+            icon: SizedBox(
+              height: 24,
+              child: Image.asset("assets/images/home_icon.png"),
+            ),
+            label: "Trang chủ",
+          ),
           BottomNavigationBarItem(
-              icon: SizedBox(
-                height: 24,
-                child: Image.asset("assets/images/ranking_icon.png"),
-              ), label: "BXH"),
+            icon: SizedBox(
+              height: 24,
+              child: Image.asset("assets/images/ranking_icon.png"),
+            ),
+            label: "BXH",
+          ),
           BottomNavigationBarItem(
-                  icon: SizedBox(
-                    height: 24,
-                    child: Image.asset("assets/images/book_icon.png"),
-                  ), label: "Từ điển"),
+            icon: SizedBox(
+              height: 24,
+              child: Image.asset("assets/images/book_icon.png"),
+            ),
+            label: "Từ điển",
+          ),
           BottomNavigationBarItem(
-              icon: SizedBox(
-                height: 24,
-                child: Image.asset("assets/images/setting.png"),
-              ), label: "Tuỳ chỉnh"),
+            icon: SizedBox(
+              height: 24,
+              child: Image.asset("assets/images/setting.png"),
+            ),
+            label: "Tuỳ chỉnh",
+          ),
         ],
         currentIndex: _currentIndex,
-        onTap: (value) {
+        onTap: (index) {
           setState(() {
-            _currentIndex = value;
+            _currentIndex = index;
           });
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          FirebaseAuth.instance.signOut();
-        },
-        child: const Text("Logout"),
       ),
     );
   }

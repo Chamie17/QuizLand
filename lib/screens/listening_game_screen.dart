@@ -151,6 +151,8 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
 
 
   Future<void> loadNextRound() async {
+    selectedAnswer = null;
+    selectedAudioFile = null;
     if (roundsRemaining <= 0) {
       // No more rounds left
       String uid = FirebaseAuth.instance.currentUser!.uid;
@@ -242,6 +244,8 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
         // Remove the correct pair from current round files and answers
         currentRoundFiles.remove(selectedAudioFile);
         currentRoundAnswers.remove(selectedAnswer);
+        selectedAnswer = null;
+        selectedAudioFile = null;
       });
 
       // Stop the audio immediately after selecting the correct answer

@@ -50,7 +50,6 @@ class _MenuScreenState extends State<MenuScreen>
   }
 
   void _handleEnterGameScreen(int level) async {
-
     Navigator.push(
         context,
         MaterialPageRoute(

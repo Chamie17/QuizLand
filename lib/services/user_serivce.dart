@@ -13,6 +13,7 @@ class UserService {
         email: email,
         password: password,
       );
+      await credential.user!.updatePhotoURL("https://firebasestorage.googleapis.com/v0/b/quizland-ba92d.firebasestorage.app/o/avatars%2Fdefault%20avatar.png?alt=media&token=96a8a7af-b4b3-4fbf-86aa-615ec12b2074");
       await credential.user!.updateDisplayName(name);
       await credential.user!.reload();
 

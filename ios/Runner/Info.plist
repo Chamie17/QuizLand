@@ -74,5 +74,15 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>QuizLand need access to your photo library to allow you to choose your profile picture.</string>
+
+    <key>NSCameraUsageDescription</key>
+    <string>QuizLand need access to your camera to take photos for your profile picture.</string>
+
+    <key>NSMicrophoneUsageDescription</key>
+    <string>QuizLand need access to your microphone to record audio for videos.</string>
+
 </dict>
 </plist>

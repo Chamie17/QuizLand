@@ -27,8 +27,8 @@ Map<int, List<String>> matchingLevel = {
   ],
   3: [
     'friend.jpg',
-    'mr.jpg',
-    'ms.jpg',
+    'Mr.jpg',
+    'Ms.jpg',
     'no.jpg',
     'teacher.jpg',
     'that.jpg',
