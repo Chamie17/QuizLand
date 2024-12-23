@@ -518,7 +518,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Ghép cặp từ vựng"),
+        title: const Text("MATCHING GAME"),
       ),
       body: Stack(
         children: [

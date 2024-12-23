@@ -282,7 +282,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text("Nghe và đoán")),
+      appBar: AppBar(centerTitle: true, title: Text("LISTENING GAME")),
       body: Stack(
         children: [
           SizedBox(

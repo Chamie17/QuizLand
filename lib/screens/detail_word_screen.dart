@@ -114,7 +114,7 @@ class _DetailWordScreenState extends State<DetailWordScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Từ điển QuizLand"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.purple.shade200,
       ),
       body: isLoading
           ? const Center(
@@ -124,7 +124,7 @@ class _DetailWordScreenState extends State<DetailWordScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.blue.shade300,
               borderRadius: BorderRadius.circular(30)),
           child: Padding(
             padding: const EdgeInsets.all(16.0),

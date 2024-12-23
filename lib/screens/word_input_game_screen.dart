@@ -160,7 +160,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Nghe và điền"),
+        title: const Text("WORD INPUT GAME"),
       ),
       body: Stack(
         children: [

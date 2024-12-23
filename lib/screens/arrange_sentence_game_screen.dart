@@ -169,7 +169,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Arrange Sentence Game"),
+        title: const Text("ARRANGE SENTENCE GAME"),
       ),
       body: Stack(
         children: [
