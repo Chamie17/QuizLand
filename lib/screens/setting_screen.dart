@@ -30,14 +30,17 @@ class _SettingScreenState extends State<SettingScreen> {
   late Future<List<String>> _avatarImageUrls;
   late User? _currentUser;
 
-  @override
-  void initState() {
-    super.initState();
-    _currentUser = FirebaseAuth.instance.currentUser; // Fetch the current user
+  void init() async {
+    _currentUser = FirebaseAuth.instance.currentUser;
     _avatarImageUrls = _loadAvatarImages();
   }
 
-  // Dispose controller to avoid memory leaks
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -82,7 +85,9 @@ class _SettingScreenState extends State<SettingScreen> {
 
     if (text != null && text.first != _nameController.text) {
       await _currentUser?.updateDisplayName(text.first);
-      setState(() {}); // Refresh the UI
+      setState(() {
+        init();
+      });
     }
   }
 
@@ -125,15 +130,23 @@ class _SettingScreenState extends State<SettingScreen> {
         );
       },
     );
-
     if (selectedAvatar != null) {
       await _currentUser!.updatePhotoURL(selectedAvatar);
-      setState(() {}); // Refresh the UI
+      setState(() {
+        init();
+      });
     }
   }
 
   void _handleAbout() async {
-
+    final result = await showOkAlertDialog(
+      context: context,
+      title: 'Welcome to QuizLand',
+      message: 'QuizLand - ứng dụng học tiếng Anh tốt nhất dành cho học sinh lớp 3!\n'
+          'Tính năng nổi bật: Học từ vựng, luyện nghe, ghép câu.\n'
+          'Liên hệ: pecham1703@gmail.com\n'
+          'Cảm ơn bạn đã đồng hành cùng QuizLand!\n',
+    );
   }
 
   @override
@@ -146,7 +159,7 @@ class _SettingScreenState extends State<SettingScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.red,
+                  color: Colors.purple.shade200,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 height: 150,
@@ -157,37 +170,28 @@ class _SettingScreenState extends State<SettingScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: Stack(
                         children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundColor: Colors.transparent,
-                            child: _currentUser?.photoURL == null
-                                ? Icon(Icons.account_circle,
-                                size: 50, color: Colors.grey[600])
-                                : null,
-                          ),
-                          _currentUser?.photoURL != null
-                              ? Positioned.fill(
-                            child: GestureDetector(
-                              onTap: _handleChangeAvatar,
-                              child: CachedNetworkImage(
-                                imageUrl: _currentUser!.photoURL!,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
+                          if (_currentUser?.photoURL != null)
+                            Positioned(
+                              child: GestureDetector(
+                                onTap: _handleChangeAvatar,
+                                child: CachedNetworkImage(
+                                  imageUrl: _currentUser!.photoURL!,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
                               ),
                             ),
-                          )
-                              : Container(),
+
                           Positioned(
                             bottom: 0,
                             right: 0,
                             child: GestureDetector(
                               onTap: _handleChangeAvatar,
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 15,
                                 backgroundColor: Colors.blue,
                                 child: Icon(
@@ -238,7 +242,7 @@ class _SettingScreenState extends State<SettingScreen> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: Colors.blue.shade300,
                       borderRadius: BorderRadius.circular(30)),
                   width: double.maxFinite,
                   child: Padding(
@@ -247,6 +251,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.yellow,
                               minimumSize: Size(double.maxFinite, 50),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16))),
@@ -258,15 +263,16 @@ class _SettingScreenState extends State<SettingScreen> {
                             children: [
                               Icon(_audioManager.isMute
                                   ? Icons.volume_off
-                                  : Icons.volume_up),
+                                  : Icons.volume_up, color: Colors.black),
                               SizedBox(width: 10),
-                              Text("Âm thanh"),
+                              Text("Âm thanh", style: TextStyle(color: Colors.black),),
                             ],
                           ),
                         ),
                         SizedBox(height: 16),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.yellow,
                               minimumSize: Size(double.maxFinite, 50),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16))),
@@ -278,24 +284,25 @@ class _SettingScreenState extends State<SettingScreen> {
                             children: [
                               Icon(_audioManager.isMusicPlaying
                                   ? Icons.music_note
-                                  : Icons.music_off),
+                                  : Icons.music_off, color: Colors.black),
                               SizedBox(width: 10),
-                              Text("Nhạc nền"),
+                              Text("Nhạc nền", style: TextStyle(color: Colors.black),),
                             ],
                           ),
                         ),
                         SizedBox(height: 16),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.yellow,
                               minimumSize: Size(double.maxFinite, 50),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16))),
                           onPressed: _handleAbout,
                           child: Row(
                             children: [
-                              Icon(Icons.help),
+                              Icon(Icons.help, color: Colors.black),
                               SizedBox(width: 10),
-                              Text("About"),
+                              Text("Thông tin", style: TextStyle(color: Colors.black),),
                             ],
                           ),
                         ),
@@ -303,6 +310,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         Spacer(),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.yellow,
                               minimumSize: Size(double.maxFinite, 50),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16))),
@@ -310,7 +318,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             await _audioManager.stopMusic();
                             FirebaseAuth.instance.signOut();
                           },
-                          child: Text("Đăng xuất"),
+                          child: Text("Đăng xuất", style: TextStyle(color: Colors.black),),
                         ),
                       ],
                     ),

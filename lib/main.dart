@@ -29,6 +29,8 @@ void main() async{
     defaultStyle: AdaptiveStyle.adaptive
   );
 
+  await AudioManager().init();
+
   runApp(MyApp());
 }
 

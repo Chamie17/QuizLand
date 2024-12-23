@@ -48,8 +48,9 @@ class _ResultScreenState extends State<ResultScreen> {
         widget.game: [gameHistory],
       },
     );
-
-    await userProfileService.saveResult(userProfile);
+    if (total != 0) {
+      await userProfileService.saveResult(userProfile);
+    }
   }
 
   @override
@@ -72,15 +73,9 @@ class _ResultScreenState extends State<ResultScreen> {
   int getStar() {
     int total = getTotal();
     if (total == 0) return 0;
-
-    int correct = widget.correct;
-    int incorrect = widget.incorrect;
-
-    if (incorrect == 0) return 3;
-
-    double percent = total / correct;
-    if (percent > 0.5) return 2;
-    if (percent > 0) return 1;
+    if (total == 10) return 3;
+    if (total > 5) return 2;
+    if (total > 0) return 1;
     return 0;
   }
 

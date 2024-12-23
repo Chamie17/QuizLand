@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quizland_app/components/home_body.dart';
+import 'package:quizland_app/screens/dictionary_screen.dart';
+import 'package:quizland_app/screens/rank_screen.dart';
 import 'package:quizland_app/screens/setting_screen.dart';
 import '../services/audio_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,12 +29,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _audioManager.dispose();  // Ensure the AudioManager is disposed properly
     super.dispose();
   }
 
   Future<void> _initAudioManager() async {
-    await _audioManager.init();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
@@ -46,7 +46,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
   }
 
-  // Handle lifecycle changes (pause/resume)
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
@@ -58,18 +57,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
   }
 
-  // Handle screen selection
   Widget _getSelectedScreen() {
     switch (_currentIndex) {
       case 0:
         return const HomeBody();
+      case 1:
+        return const RankScreen();
+      case 2:
+        return const DictionaryScreen();
       case 3:
         return const SettingScreen();
       default:
         return const HomeBody();
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

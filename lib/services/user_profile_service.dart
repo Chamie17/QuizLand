@@ -9,20 +9,13 @@ class UserProfileService {
   Future<void> saveResult(UserProfile userProfile) async {
     try {
       DocumentReference userRef = _firestore.collection('userProfile').doc(userProfile.uid);
-
-      // Get the current user profile from Firestore
       DocumentSnapshot userSnapshot = await userRef.get();
 
       if (userSnapshot.exists) {
-        // User exists, fetch the current game history
         Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
         UserProfile currentUserProfile = UserProfile.fromMap(userData);
-
-        // Check if the game exists for the given game name
         if (currentUserProfile.history.containsKey(userProfile.history.keys.first)) {
           List<GameHistory> gameHistory = currentUserProfile.history[userProfile.history.keys.first]!;
-
-          // Find the existing game history for the specific level
           GameHistory? existingGameHistory;
           for (var game in gameHistory) {
             if (game.level == userProfile.history.values.first.first.level) {
@@ -30,24 +23,16 @@ class UserProfileService {
               break;
             }
           }
-
-          // If game history exists for that level, compare the new result with the old one
           if (existingGameHistory != null) {
             int newStar = userProfile.history.values.first.first.star;
             int newTotal = userProfile.history.values.first.first.total;
-
-            // Update if the new result is better (higher star or total score)
             if (existingGameHistory.star < newStar ||
                 (existingGameHistory.star == newStar && existingGameHistory.total < newTotal)) {
-              // Update the existing game history entry
               gameHistory[gameHistory.indexOf(existingGameHistory)] = userProfile.history.values.first.first;
             }
           } else {
-            // If no existing history for that level, add the new game history
             gameHistory.add(userProfile.history.values.first.first);
           }
-
-          // Update the user's history in Firestore
           await userRef.update({
             'history': currentUserProfile.history.map((key, value) => MapEntry(
               key,
@@ -55,7 +40,6 @@ class UserProfileService {
             )),
           });
         } else {
-          // If the game doesn't exist in history, add the new game history for that game
           currentUserProfile.history[userProfile.history.keys.first] = userProfile.history.values.first;
           await userRef.update({
             'history': currentUserProfile.history.map((key, value) => MapEntry(
@@ -65,11 +49,40 @@ class UserProfileService {
           });
         }
       } else {
-        // If the user doesn't exist, create a new user profile
         await userRef.set(userProfile.toMap());
       }
     } catch (e) {
       print('Error saving result: $e');
     }
   }
+
+  Future<List<GameHistory>> getLevelsHistory(String gameName, String uid) async {
+    try {
+      DocumentReference userRef = _firestore.collection('userProfile').doc(uid);
+      DocumentSnapshot userSnapshot = await userRef.get();
+
+      if (userSnapshot.exists) {
+        Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+        UserProfile userProfile = UserProfile.fromMap(userData);
+
+        if (userProfile.history.containsKey(gameName)) {
+          // Sort the game history by level in ascending order
+          List<GameHistory> sortedHistory = userProfile.history[gameName]!;
+          sortedHistory.sort((a, b) => a.level.compareTo(b.level)); // Ascending order by level
+          return sortedHistory;
+        } else {
+          print('No history found for the game: $gameName');
+          return [];
+        }
+      } else {
+        print('User profile not found for UID: $uid');
+        return [];
+      }
+    } catch (e) {
+      print('Error retrieving levels history: $e');
+      return [];
+    }
+  }
+
+
 }

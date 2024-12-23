@@ -80,11 +80,6 @@ class _HomeBodyState extends State<HomeBody>
 
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void init() async {
     targets.add(
         TargetFocus(
@@ -289,7 +284,7 @@ class _HomeBodyState extends State<HomeBody>
   }
 
   void _goToWordScreen() async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFc1a3ef), boxColor: Color(0xFFefa13e), gameName: 'wordInput',),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFc1a3ef), boxColor: Color(0xFF90CE3E), gameName: 'wordInput',),));
   }
 
   void _goToMusicScreen() async {
