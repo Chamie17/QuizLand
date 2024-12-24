@@ -120,7 +120,11 @@ class _SettingScreenState extends State<SettingScreen> {
             child: Column(
               children: avatarImageUrls.map((avatarUrl) {
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async{
+                    bool isMute = prefs.getBool('isMute') ?? false;
+                    if (!isMute) {
+                      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+                    }
                     Navigator.of(context).pop(avatarUrl);
                   },
                   child: Padding(
