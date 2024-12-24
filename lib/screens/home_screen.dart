@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:quizland_app/components/home_body.dart';
 import 'package:quizland_app/screens/dictionary_screen.dart';
@@ -18,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   final AudioManager _audioManager = AudioManager();
   bool isMusicPlaying = true;
   bool isMute = false;
+  late SharedPreferences prefs;
 
   @override
   void initState() {
@@ -33,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _initAudioManager() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     setState(() {
       isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
       isMute = prefs.getBool('isMute') ?? false;
@@ -109,7 +111,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
         ],
         currentIndex: _currentIndex,
-        onTap: (index) {
+        onTap: (index) async {
+          bool isMute = prefs.getBool('isMute') ?? false;
+          if (!isMute) {
+            await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+          }
           setState(() {
             _currentIndex = index;
           });

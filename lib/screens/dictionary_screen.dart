@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quizland_app/screens/arrange_sentence_game_screen.dart';
 import 'package:quizland_app/screens/detail_word_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DictionaryScreen extends StatefulWidget {
   const DictionaryScreen({super.key});
@@ -15,8 +17,10 @@ class DictionaryScreen extends StatefulWidget {
 class _DictionaryScreenState extends State<DictionaryScreen> {
   late List<String> words = [];
   late Map<String, String> audioUrl = {};
+  late SharedPreferences prefs;
 
   void init() async {
+    prefs = await SharedPreferences.getInstance();
     final String jsonString =
         await rootBundle.loadString('assets/audio_source/audio_files.json');
     final Map<String, dynamic> audioMap = jsonDecode(jsonString);
@@ -40,6 +44,10 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
   }
 
   void detailWord(String word, String audioUrl) async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     Navigator.push(
         context,
         MaterialPageRoute(

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +7,7 @@ import 'package:quizland_app/models/user_profile.dart';
 import 'package:quizland_app/screens/matching_game_screen.dart';
 import 'package:quizland_app/screens/word_input_game_screen.dart';
 import 'package:quizland_app/services/user_profile_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'arrange_sentence_game_screen.dart';
 import 'listening_game_screen.dart';
@@ -30,6 +32,8 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
+  late SharedPreferences prefs;
+
   void saveResult() async {
     int star = getStar();
     int total = getTotal();
@@ -50,6 +54,14 @@ class _ResultScreenState extends State<ResultScreen> {
     );
     if (total != 0) {
       await userProfileService.saveResult(userProfile);
+    }
+  }
+
+  void init() async {
+    prefs = await SharedPreferences.getInstance();
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/result_sound_${getStar()}.mp3'), volume: 100);
     }
   }
 
@@ -80,14 +92,26 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   void _handleGoHome() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     context.pushReplacementNamed('login');
   }
 
   void _handleReplay() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     Navigator.pop(context, true);
   }
 
   void _handleContinue() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     switch (widget.game) {
       case 'matching':
         Navigator.push(context, MaterialPageRoute(builder: (context) =>

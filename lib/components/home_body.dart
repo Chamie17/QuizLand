@@ -1,10 +1,13 @@
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+// import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quizland_app/screens/matching_game_screen.dart';
 import 'package:quizland_app/screens/menu_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -30,6 +33,8 @@ class _HomeBodyState extends State<HomeBody>
   var _keyWord = GlobalKey();
   var _keyCommunicate = GlobalKey();
   var _keyConnect = GlobalKey();
+
+  late SharedPreferences prefs;
 
   @override
   void initState() {
@@ -81,6 +86,7 @@ class _HomeBodyState extends State<HomeBody>
   }
 
   void init() async {
+    prefs = await SharedPreferences.getInstance();
     targets.add(
         TargetFocus(
             identify: "Target 1",
@@ -246,7 +252,12 @@ class _HomeBodyState extends State<HomeBody>
 
   List<TargetFocus> targets = [];
 
-  void showTutorial() {
+  void showTutorial() async{
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
+
     TutorialCoachMark(
       targets: targets, // List<TargetFocus>
       colorShadow: Colors.black, // DEFAULT Colors.black
@@ -276,18 +287,34 @@ class _HomeBodyState extends State<HomeBody>
   }
   
   void _goToMatchingScreen() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFd5c1a6), boxColor: Colors.yellowAccent, gameName: 'matching',),));
   }
 
   void _goToCommunicateScreen() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF80b2b3), boxColor: Color(0xFFc56980), gameName: 'arrangeSentence',),));
   }
 
   void _goToWordScreen() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFc1a3ef), boxColor: Color(0xFF90CE3E), gameName: 'wordInput',),));
   }
 
   void _goToMusicScreen() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF75cde8), boxColor: Color(0xFFf5f05e), gameName: 'listen',),));
   }
 

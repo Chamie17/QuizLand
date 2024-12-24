@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
 import '../models/question_answer.dart';
@@ -28,6 +30,11 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
   double warningScale = 1.0;
   int correctAnswers = 0;
   int incorrectAnswers = 0;
+  late SharedPreferences prefs;
+
+  void init() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
   Future<void> loadQuestionAnswers() async {
     try {
@@ -60,6 +67,10 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
   }
 
   void triggerWarningEffect() async{
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'), volume: 100);
+    }
     setState(() {
       showWarning = true;
     });
@@ -83,7 +94,11 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     Future.delayed(const Duration(seconds: 1), resetCurrentQuestion);
   }
 
-  void onWordSelected(String word, int index) {
+  void onWordSelected(String word, int index) async{
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+    }
     setState(() {
       if (selectedWords.contains(null)) {
         int placeholderIndex = selectedWords.indexOf(null);
@@ -93,7 +108,11 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     });
   }
 
-  void onWordRemoved(int index) {
+  void onWordRemoved(int index) async{
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+    }
     setState(() {
       String? removedWord = selectedWords[index];
       if (removedWord != null) {
@@ -144,8 +163,12 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     });
   }
 
-  void handleCheckAnswer() {
+  void handleCheckAnswer() async{
     if (checkAnswer()) {
+      bool isMute = prefs.getBool('isMute') ?? false;
+      if (!isMute) {
+        await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'), volume: 100);
+      }
       goToNextQuestion();
       setState(() {
         correctAnswers++;  // Increment correct answers
@@ -160,6 +183,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
 
   @override
   void initState() {
+    init();
     super.initState();
     loadQuestionAnswers();
   }

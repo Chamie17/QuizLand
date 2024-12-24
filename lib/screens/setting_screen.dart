@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -29,10 +30,12 @@ class _SettingScreenState extends State<SettingScreen> {
   ];
   late Future<List<String>> _avatarImageUrls;
   late User? _currentUser;
+  late SharedPreferences prefs;
 
   void init() async {
     _currentUser = FirebaseAuth.instance.currentUser;
     _avatarImageUrls = _loadAvatarImages();
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override
@@ -64,6 +67,10 @@ class _SettingScreenState extends State<SettingScreen> {
 
   // Handle name update
   _handleChangeName() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     _nameController.text = _currentUser?.displayName ?? '';
     final text = await showTextInputDialog(
       context: context,
@@ -93,6 +100,10 @@ class _SettingScreenState extends State<SettingScreen> {
 
   // Handle avatar change
   _handleChangeAvatar() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     final avatarImageUrls = await _avatarImageUrls;
 
     if (avatarImageUrls.isEmpty) {
@@ -139,6 +150,10 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   void _handleAbout() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     final result = await showOkAlertDialog(
       context: context,
       title: 'Welcome to QuizLand',

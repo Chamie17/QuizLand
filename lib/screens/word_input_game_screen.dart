@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
 class WordInputGameScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class WordInputGameScreen extends StatefulWidget {
 }
 
 class _WordInputGameScreenState extends State<WordInputGameScreen> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  // final AudioPlayer _audioPlayer = AudioPlayer();
   List<String> files = [];
   Map<String, String> audioTitles = {};
   String currentTitle = "";
@@ -26,6 +27,8 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
   int correctAnswers = 0;
   int incorrectAnswers = 0;
   bool errorOccurred = false; // Flag to track error state
+  late SharedPreferences prefs;
+  var currentFile;
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
   }
 
   Future<void> init() async {
+    prefs = await SharedPreferences.getInstance();
     try {
       // Load the JSON file containing audio file paths and titles
       final String jsonString =
@@ -71,7 +75,6 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
     });
   }
 
-
   void loadNextAudio() async{
     if (files.isEmpty) {
       // Show completion dialog when no files remain
@@ -93,19 +96,23 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
     }
 
     // Load the next audio file
-    final currentFile = files.removeAt(0);
+    currentFile = files.removeAt(0);
     currentTitle = audioTitles[currentFile]!;
     shuffledLetters = currentTitle.split('')..shuffle(Random());
     selectedLetters = [];
 
     setState(() {
-      _audioPlayer.setAsset('assets/audio_source/${widget.level}/$currentFile');
+
     });
+    await AudioPlayer().play(AssetSource('audio_source/${widget.level}/$currentFile'));
     print(currentFile);
-    _audioPlayer.play();
   }
 
-  void onLetterTap(String letter, bool isInCenter) {
+  void onLetterTap(String letter, bool isInCenter) async{
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+    }
     setState(() {
       if (isInCenter) {
         // Move back to shuffled letters
@@ -121,11 +128,19 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
 
   void checkResult() async {
     if (selectedLetters.join('') == currentTitle) {
+      bool isMute = prefs.getBool('isMute') ?? false;
+      if (!isMute) {
+        await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'), volume: 100);
+      }
       setState(() {
         correctAnswers++; // Increment correct answer count
       });
       loadNextAudio(); // Proceed to next word
     } else {
+      bool isMute = prefs.getBool('isMute') ?? false;
+      if (!isMute) {
+        await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'), volume: 100);
+      }
       setState(() {
         incorrectAnswers++; // Increment incorrect answer count
         errorOccurred = true; // Show error image
@@ -151,7 +166,6 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -244,9 +258,8 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 72),
                 child: GestureDetector(
-                  onTap: () {
-                    _audioPlayer.seek(Duration.zero);
-                    _audioPlayer.play();
+                  onTap: () async {
+                    await AudioPlayer().play(AssetSource('audio_source/${widget.level}/$currentFile'));
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -260,9 +273,8 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                             size: 50,
                             color: Colors.white,
                           ),
-                          onPressed: () {
-                            _audioPlayer.seek(Duration.zero);
-                            _audioPlayer.play();
+                          onPressed: () async {
+                            await AudioPlayer().play(AssetSource('audio_source/${widget.level}/$currentFile'));
                           },
                         ),
                         Text(

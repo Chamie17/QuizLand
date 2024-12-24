@@ -1,8 +1,10 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quizland_app/screens/detail_rank_screen.dart';
 import 'package:quizland_app/services/user_serivce.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import '../services/user_profile_service.dart';
 
@@ -24,7 +26,10 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
   late Animation<double> _scaleAnimation2;
   late Animation<double> _scaleAnimation3;
 
+  late SharedPreferences prefs;
+
   Future<void> init() async {
+    prefs = await SharedPreferences.getInstance();
     top3Users = await userProfileService.getTop3UsersByStarAndTotalScore();
     users.add(await userService.getUserById(top3Users[0]['uid']));
     users.add(await userService.getUserById(top3Users[1]['uid']));
@@ -77,7 +82,11 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _handleButton(String game) {
+  void _handleButton(String game) async{
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     switch (game) {
       case 'matching':
         Navigator.push(
@@ -141,7 +150,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
           Positioned.fill(
             child: Image.asset(
               "assets/images/rank_bg.png",
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.fill,
             ),
           ),
 
@@ -178,9 +187,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
                           child: CachedNetworkImage(
                             imageUrl: users[2]['imageUrl'],
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
+                            placeholder: (context, url) => const CircularProgressIndicator(),
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.error),
                           ),
@@ -210,9 +217,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
                           child: CachedNetworkImage(
                             imageUrl: users[0]['imageUrl'],
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
+                            placeholder: (context, url) => const CircularProgressIndicator(),
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.error),
                           ),
@@ -242,9 +247,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
                           child: CachedNetworkImage(
                             imageUrl: users[1]['imageUrl'],
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
+                            placeholder: (context, url) => const CircularProgressIndicator(),
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.error),
                           ),

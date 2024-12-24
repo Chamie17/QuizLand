@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quizland_app/screens/welcome_screen.dart';
 import 'package:quizland_app/services/question_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 import '../utils/matching_level.dart';
 
@@ -25,8 +27,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   late Animation<double> _animation_worm;
   bool _showIncorrectImage = false;
 
-
-
   List<String> _questions = [];
   List<String> _answers = [];
   List<bool> _questionMatched = [];
@@ -41,6 +41,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   int _minus = 0;
   final int _roundSize = 3; // Number of pairs per round
   int _roundsRemaining = 7; // Tracks remaining rounds
+  late SharedPreferences prefs;
 
   @override
   void initState() {
@@ -55,6 +56,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   }
 
   void init() async {
+    prefs = await SharedPreferences.getInstance();
     // Initialize the AnimationController
     _controller_worm = AnimationController(
       duration: Duration(seconds: 8), // Animation duration
@@ -232,7 +234,11 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     }
   }
 
-  void _onSelectQuestion(int index) {
+  void _onSelectQuestion(int index) async{
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+    }
     if (_questionMatched[index]) return;
 
     setState(() {
@@ -243,7 +249,11 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     _checkMatch();
   }
 
-  void _onSelectAnswer(int index) {
+  void _onSelectAnswer(int index) async{
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+    }
     if (_answerMatched[index]) return;
 
     setState(() {
@@ -260,6 +270,10 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       final answer = _selectedAnswers.last;
 
       if (question.split('/').last.split('.').first == answer) {
+        bool isMute = prefs.getBool('isMute') ?? false;
+        if (!isMute) {
+          await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'), volume: 100);
+        }
         setState(() {
           _point++;
           final questionIndex = _questions.indexOf(question);
@@ -276,6 +290,10 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
           }
         });
       } else {
+        bool isMute = prefs.getBool('isMute') ?? false;
+        if (!isMute) {
+          await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'), volume: 100);
+        }
         setState(() {
           _minus++;
           final questionIndex = _questions.indexOf(question);

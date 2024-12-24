@@ -1,4 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -6,6 +7,7 @@ import 'package:quizland_app/screens/arrange_sentence_game_screen.dart';
 import 'package:quizland_app/screens/listening_game_screen.dart';
 import 'package:quizland_app/screens/matching_game_screen.dart';
 import 'package:quizland_app/screens/word_input_game_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_profile.dart';
 import '../services/user_profile_service.dart';
@@ -27,11 +29,13 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late SharedPreferences prefs;
 
   late List<GameHistory> gameHistory = [];
   bool isLoading = true;
 
   void init() async {
+    prefs = await SharedPreferences.getInstance();
     var user = FirebaseAuth.instance.currentUser;
     gameHistory = await userProfileService.getLevelsHistory(widget.gameName, user!.uid);
     setState(() {
@@ -63,6 +67,10 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
   }
 
   void _handleEnterGameScreen(int level) async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
         switch (widget.gameName) {
@@ -82,6 +90,10 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
   }
 
   void _handleEnterLockedLevel() async {
+    bool isMute = prefs.getBool('isMute') ?? false;
+    if (!isMute) {
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+    }
     final result = await showOkAlertDialog(
       context: context,
       title: 'Thông báo',
@@ -105,7 +117,11 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
             left: 0,
             top: 30,
             child: IconButton(
-              onPressed: () {
+              onPressed: () async {
+                bool isMute = prefs.getBool('isMute') ?? false;
+                if (!isMute) {
+                  await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+                }
                 Navigator.pop(context);
               },
               icon: Image.asset(

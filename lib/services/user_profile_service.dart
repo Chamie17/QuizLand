@@ -275,7 +275,6 @@ class UserProfileService {
                 });
               }
             });
-            print("Hello000000000000000000000000000000 $gameName");
           }
 
           break;

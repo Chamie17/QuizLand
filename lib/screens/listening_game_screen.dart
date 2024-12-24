@@ -8,6 +8,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart'; // Import the vibration package
 import 'dart:math'; // For random selection
 
@@ -46,6 +47,8 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
 
   int correctAnswers = 0;
   int incorrectAnswers = 0;
+
+  late SharedPreferences prefs;
 
   @override
   void initState() {
@@ -88,6 +91,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
   }
 
   void init() async {
+    prefs = await SharedPreferences.getInstance();
     // Load the audio files and their titles from the JSON
     final String jsonString =
     await rootBundle.loadString('assets/audio_source/audio_files.json');
@@ -149,7 +153,6 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
     });
   }
 
-
   Future<void> loadNextRound() async {
     selectedAnswer = null;
     selectedAudioFile = null;
@@ -203,7 +206,6 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
     roundsRemaining--; // Decrease remaining rounds
   }
 
-
   List<String> _getRandomItems(int count, int maxIndex) {
     final random = Random();
     List<String> items = [];
@@ -237,6 +239,10 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
 
     if (selectedAnswer == correctTitle) {
       // Correct answer
+      bool isMute = prefs.getBool('isMute') ?? false;
+      if (!isMute) {
+        await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'), volume: 100);
+      }
       setState(() {
         correctAnswers++; // Increment correct answers count
         // Add the correct pair to answeredPairs
@@ -256,6 +262,10 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
         loadNextRound();
       }
     } else {
+      bool isMute = prefs.getBool('isMute') ?? false;
+      if (!isMute) {
+        await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'), volume: 100);
+      }
       // Incorrect answer: trigger vibration and show error
       if (await Vibration.hasVibrator() ?? false) {
         Vibration.vibrate(duration: 500); // Vibrate for 500 milliseconds
@@ -277,7 +287,6 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -431,7 +440,11 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
-                              onTap: () {
+                              onTap: () async {
+                                bool isMute = prefs.getBool('isMute') ?? false;
+                                if (!isMute) {
+                                  await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+                                }
                                 checkAnswer(currentRoundAnswers[index]);
                               },
                               child: Container(
