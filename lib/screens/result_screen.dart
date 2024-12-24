@@ -67,6 +67,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
   @override
   void initState() {
+    init();
     print(
         '${widget.uid} ${widget.game} ${widget.level} ${widget.correct} ${widget.incorrect}');
     saveResult();
