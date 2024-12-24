@@ -111,7 +111,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
   void onLetterTap(String letter, bool isInCenter) async{
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'));
     }
     setState(() {
       if (isInCenter) {
@@ -130,7 +130,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
     if (selectedLetters.join('') == currentTitle) {
       bool isMute = prefs.getBool('isMute') ?? false;
       if (!isMute) {
-        await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'), volume: 100);
+        await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'));
       }
       setState(() {
         correctAnswers++; // Increment correct answer count
@@ -139,7 +139,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
     } else {
       bool isMute = prefs.getBool('isMute') ?? false;
       if (!isMute) {
-        await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'), volume: 100);
+        await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'));
       }
       setState(() {
         incorrectAnswers++; // Increment incorrect answer count
