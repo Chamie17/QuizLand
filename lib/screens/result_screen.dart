@@ -317,6 +317,37 @@ class _ResultScreenState extends State<ResultScreen> {
                 child: SizedBox(
                     // height: 300,
                     child: Lottie.asset('assets/lottiefiles/fireworks.json'))),
+
+          Positioned(
+              left: 0,
+              right: 0,
+              bottom: 250,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                      onPressed: _handleReplay,
+                      icon: SizedBox(
+                        height: 100,
+                        child: Image.asset(
+                            'assets/images/result_asset/replay_button.png'),
+                      )),
+                  IconButton(
+                      onPressed: _handleGoHome,
+                      icon: SizedBox(
+                        height: 100,
+                        child: Image.asset(
+                            'assets/images/result_asset/home_button.png'),
+                      )),
+                  IconButton(
+                      onPressed: _handleContinue,
+                      icon: SizedBox(
+                        height: 100,
+                        child: Image.asset(
+                            'assets/images/result_asset/next_button.png'),
+                      ))
+                ],
+              )),
         ],
       ),
     );
