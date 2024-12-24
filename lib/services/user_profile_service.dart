@@ -247,6 +247,7 @@ class UserProfileService {
                 'star': totalStars,
                 'totalscore': totalScore,
               });
+              
             }
           } else if (['arrangeSentence', 'listen', 'matching', 'wordInput'].contains(gameName)) {
             usersData.add({
@@ -254,27 +255,28 @@ class UserProfileService {
               'gameName': gameName,
               'star': 0,
               'totalscore': 0,
+
             });
           } else {
+            int gameTotalStars = 0;
+            int gameTotalScore = 0;
             // If gameName does not exist, get all game names and calculate totals
             userProfile.history.forEach((game, gameHistoryList) {
               if (gameHistoryList != null) {  // Ensure gameHistoryList is not null
-                int gameTotalStars = 0;
-                int gameTotalScore = 0;
-
                 for (var gameHistory in gameHistoryList) {
                   gameTotalStars += gameHistory.star;
                   gameTotalScore += gameHistory.total;
                 }
-
-                usersData.add({
-                  'uid': userProfile.uid,
-                  'gameName': game,
-                  'star': gameTotalStars,
-                  'totalscore': gameTotalScore,
-                });
               }
             });
+
+            usersData.add({
+              'uid': userProfile.uid,
+              'gameName': 'quizland',
+              'star': gameTotalStars,
+              'totalscore': gameTotalScore,
+            });
+
           }
 
           break;
