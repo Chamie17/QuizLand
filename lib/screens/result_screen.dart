@@ -245,14 +245,53 @@ class _ResultScreenState extends State<ResultScreen> {
                   ),
                 ],
               )),
+
           if (getStar() == 0)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-              child: SizedBox(
-                  height: 250,
-                  child: Lottie.asset('assets/lottiefiles/0_star_ani.json')))
+            Positioned(
+                left: 0,
+                right: 0,
+                bottom: -20,
+                child: SizedBox(
+                    height: 300,
+                    child: Lottie.asset('assets/lottiefiles/0_star_ani.json'))),
+
+          if (getStar() == 1)
+            Positioned(
+                left: 0,
+                right: 0,
+                bottom: -50,
+                child: SizedBox(
+                    height: 300,
+                    child: Lottie.asset('assets/lottiefiles/1_star_ani.json'))),
+
+          if (getStar() == 2)
+            Positioned(
+                left: -50,
+                bottom: 0,
+                child: SizedBox(
+                    height: 250,
+                    child: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.rotationY(3.14159),
+                        child: Lottie.asset('assets/lottiefiles/2_star_ani.json')))),
+
+          if (getStar() == 3)
+            Positioned(
+                left: 0,
+                right: 0,
+                bottom: -20,
+                child: SizedBox(
+                    height: 300,
+                    child: Lottie.asset('assets/lottiefiles/3_star_ani.json'))),
+
+          if (getStar() == 3)
+            Positioned(
+                left: 0,
+                right: 0,
+                top: -300,
+                child: SizedBox(
+                    // height: 300,
+                    child: Lottie.asset('assets/lottiefiles/fireworks.json'))),
         ],
       ),
     );

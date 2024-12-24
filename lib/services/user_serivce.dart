@@ -1,6 +1,9 @@
 import 'package:bcrypt/bcrypt.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import '../models/user.dart';
 
@@ -29,5 +32,23 @@ class UserService {
     }
     return null;
   }
+
+  Future<Map<String, dynamic>> getUserById(String uid) async {
+    final url = Uri.parse('https://us-central1-quizland-ba92d.cloudfunctions.net/getUserById?uid=$uid');
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print('Error: ${response.statusCode}');
+        return {'error': 'Failed to fetch user'};
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {'error': 'An unexpected error occurred'};
+    }
+  }
+
 }
 
