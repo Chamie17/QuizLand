@@ -195,10 +195,10 @@ isLoading = false;
                       width: 32,
                     ),
                     Text("${me['name']}\n"
-                        "${meStarNScore['totalscore']}đ"),
+                        "${meStarNScore['totalscore'] ?? 0}đ"),
                   ],
                 ),
-                trailing: Text("${meStarNScore['star']} ⭐"),
+                trailing: Text("${meStarNScore['star'] ?? 0} ⭐"),
               ),
             )
           ],

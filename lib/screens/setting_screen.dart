@@ -69,7 +69,7 @@ class _SettingScreenState extends State<SettingScreen> {
   _handleChangeName() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     _nameController.text = _currentUser?.displayName ?? '';
     final text = await showTextInputDialog(
@@ -102,7 +102,7 @@ class _SettingScreenState extends State<SettingScreen> {
   _handleChangeAvatar() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     final avatarImageUrls = await _avatarImageUrls;
 
@@ -152,7 +152,7 @@ class _SettingScreenState extends State<SettingScreen> {
   void _handleAbout() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     final result = await showOkAlertDialog(
       context: context,

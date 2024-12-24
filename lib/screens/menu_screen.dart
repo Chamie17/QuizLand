@@ -69,7 +69,7 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
   void _handleEnterGameScreen(int level) async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
@@ -92,7 +92,7 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
   void _handleEnterLockedLevel() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     final result = await showOkAlertDialog(
       context: context,
@@ -120,7 +120,7 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
               onPressed: () async {
                 bool isMute = prefs.getBool('isMute') ?? false;
                 if (!isMute) {
-                  await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+                  await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
                 }
                 Navigator.pop(context);
               },

@@ -255,7 +255,7 @@ class _HomeBodyState extends State<HomeBody>
   void showTutorial() async{
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
 
     TutorialCoachMark(
@@ -289,7 +289,7 @@ class _HomeBodyState extends State<HomeBody>
   void _goToMatchingScreen() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFd5c1a6), boxColor: Colors.yellowAccent, gameName: 'matching',),));
   }
@@ -297,7 +297,7 @@ class _HomeBodyState extends State<HomeBody>
   void _goToCommunicateScreen() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF80b2b3), boxColor: Color(0xFFc56980), gameName: 'arrangeSentence',),));
   }
@@ -305,7 +305,7 @@ class _HomeBodyState extends State<HomeBody>
   void _goToWordScreen() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFc1a3ef), boxColor: Color(0xFF90CE3E), gameName: 'wordInput',),));
   }
@@ -313,7 +313,7 @@ class _HomeBodyState extends State<HomeBody>
   void _goToMusicScreen() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF75cde8), boxColor: Color(0xFFf5f05e), gameName: 'listen',),));
   }

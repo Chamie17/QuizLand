@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         onTap: (index) async {
           bool isMute = prefs.getBool('isMute') ?? false;
           if (!isMute) {
-            await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+            await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
           }
           setState(() {
             _currentIndex = index;

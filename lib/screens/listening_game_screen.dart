@@ -241,7 +241,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
       // Correct answer
       bool isMute = prefs.getBool('isMute') ?? false;
       if (!isMute) {
-        await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'), volume: 100);
+        await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'));
       }
       setState(() {
         correctAnswers++; // Increment correct answers count
@@ -264,7 +264,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
     } else {
       bool isMute = prefs.getBool('isMute') ?? false;
       if (!isMute) {
-        await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'), volume: 100);
+        await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'));
       }
       // Incorrect answer: trigger vibration and show error
       if (await Vibration.hasVibrator() ?? false) {
@@ -443,7 +443,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                               onTap: () async {
                                 bool isMute = prefs.getBool('isMute') ?? false;
                                 if (!isMute) {
-                                  await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+                                  await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'));
                                 }
                                 checkAnswer(currentRoundAnswers[index]);
                               },

@@ -237,7 +237,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   void _onSelectQuestion(int index) async{
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'));
     }
     if (_questionMatched[index]) return;
 
@@ -252,7 +252,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   void _onSelectAnswer(int index) async{
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'));
     }
     if (_answerMatched[index]) return;
 
@@ -272,7 +272,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       if (question.split('/').last.split('.').first == answer) {
         bool isMute = prefs.getBool('isMute') ?? false;
         if (!isMute) {
-          await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'), volume: 100);
+          await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'));
         }
         setState(() {
           _point++;
@@ -292,7 +292,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       } else {
         bool isMute = prefs.getBool('isMute') ?? false;
         if (!isMute) {
-          await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'), volume: 100);
+          await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'));
         }
         setState(() {
           _minus++;

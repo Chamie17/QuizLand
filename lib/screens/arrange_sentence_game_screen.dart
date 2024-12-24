@@ -69,7 +69,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
   void triggerWarningEffect() async{
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'));
     }
     setState(() {
       showWarning = true;
@@ -97,7 +97,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
   void onWordSelected(String word, int index) async{
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'));
     }
     setState(() {
       if (selectedWords.contains(null)) {
@@ -111,7 +111,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
   void onWordRemoved(int index) async{
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'));
     }
     setState(() {
       String? removedWord = selectedWords[index];
@@ -167,7 +167,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     if (checkAnswer()) {
       bool isMute = prefs.getBool('isMute') ?? false;
       if (!isMute) {
-        await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'), volume: 100);
+        await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'));
       }
       goToNextQuestion();
       setState(() {

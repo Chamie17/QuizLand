@@ -247,7 +247,7 @@ class UserProfileService {
                 'star': totalStars,
                 'totalscore': totalScore,
               });
-              
+
             }
           } else if (['arrangeSentence', 'listen', 'matching', 'wordInput'].contains(gameName)) {
             usersData.add({

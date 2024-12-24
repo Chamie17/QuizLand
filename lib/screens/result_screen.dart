@@ -61,7 +61,7 @@ class _ResultScreenState extends State<ResultScreen> {
     prefs = await SharedPreferences.getInstance();
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/result_sound_${getStar()}.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/result_sound_${getStar()}.mp3'));
     }
   }
 
@@ -94,7 +94,7 @@ class _ResultScreenState extends State<ResultScreen> {
   void _handleGoHome() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     context.pushReplacementNamed('login');
   }
@@ -102,7 +102,7 @@ class _ResultScreenState extends State<ResultScreen> {
   void _handleReplay() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     Navigator.pop(context, true);
   }
@@ -110,7 +110,7 @@ class _ResultScreenState extends State<ResultScreen> {
   void _handleContinue() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     switch (widget.game) {
       case 'matching':

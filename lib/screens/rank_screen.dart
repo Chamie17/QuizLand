@@ -85,7 +85,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
   void _handleButton(String game) async{
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'), volume: 100);
+      await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
     switch (game) {
       case 'matching':
