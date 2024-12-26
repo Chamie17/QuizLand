@@ -12,7 +12,8 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeBody extends StatefulWidget {
-  const HomeBody({super.key});
+  const HomeBody({super.key, required this.bottomNavigationBarKey});
+  final GlobalKey bottomNavigationBarKey;
 
   @override
   State<HomeBody> createState() => _HomeBodyState();
@@ -252,6 +253,14 @@ class _HomeBodyState extends State<HomeBody>
 
   List<TargetFocus> targets = [];
 
+  double getBottomHeight() {
+    final RenderBox? renderBox = widget.bottomNavigationBarKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null) {
+      return renderBox.size.height;
+    }
+    return 0;
+  }
+
   void showTutorial() async{
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
@@ -326,8 +335,8 @@ class _HomeBodyState extends State<HomeBody>
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - 68,
-              child: Image.asset('assets/images/bg.jpg', fit: BoxFit.cover,),
+              height: MediaQuery.of(context).size.height - getBottomHeight(),
+              child: Image.asset('assets/images/bg.jpg', fit: BoxFit.fill,),
             ),
             // sun
             Positioned(

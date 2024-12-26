@@ -15,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+  final GlobalKey _bottomNavigationBarKey = GlobalKey();
   int _currentIndex = 0;
   final AudioManager _audioManager = AudioManager();
   bool isMusicPlaying = true;
@@ -62,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Widget _getSelectedScreen() {
     switch (_currentIndex) {
       case 0:
-        return const HomeBody();
+        return HomeBody(bottomNavigationBarKey: _bottomNavigationBarKey);
       case 1:
         return const RankScreen();
       case 2:
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       case 3:
         return const SettingScreen();
       default:
-        return const HomeBody();
+        return HomeBody(bottomNavigationBarKey: _bottomNavigationBarKey);
     }
   }
 
@@ -79,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return Scaffold(
       body: _getSelectedScreen(),
       bottomNavigationBar: BottomNavigationBar(
+        key: _bottomNavigationBarKey,
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
