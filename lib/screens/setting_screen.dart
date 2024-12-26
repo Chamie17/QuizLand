@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quizland_app/services/audio_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -336,6 +337,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           onPressed: () async {
                             await _audioManager.stopMusic();
                             FirebaseAuth.instance.signOut();
+                            context.pushReplacementNamed('login');
                           },
                           child: Text("Đăng xuất", style: TextStyle(color: Colors.black),),
                         ),
