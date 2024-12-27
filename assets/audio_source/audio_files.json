@@ -56,5 +56,63 @@
     "walk.mp3",
     "cook.mp3",
     "sing.mp3"
+  ],
+  "6": [
+    "art room.mp3",
+    "classroom.mp3",
+    "computer room.mp3",
+    "gym.mp3",
+    "library.mp3",
+    "music room.mp3",
+    "our.mp3",
+    "playground.mp3",
+    "school.mp3"
+  ],
+  "7":[
+    "close.mp3",
+    "come in.mp3",
+    "English.mp3",
+    "go out.mp3",
+    "please.mp3",
+    "sit down.mp3",
+    "speak.mp3",
+    "stand up.mp3",
+    "Vietnamese.mp3"
+  ],
+  "8": [
+    "book.mp3",
+    "eraser.mp3",
+    "have.mp3",
+    "notebook.mp3",
+    "pen.mp3",
+    "pencil.mp3",
+    "pencil case.mp3",
+    "ruler.mp3",
+    "school bag.mp3"
+  ],
+  "9": [
+    "black.mp3",
+    "blue.mp3",
+    "brown.mp3",
+    "colour.mp3",
+    "green.mp3",
+    "orange.mp3",
+    "red.mp3",
+    "they.mp3",
+    "white.mp3",
+    "yellow.mp3"
+  ],
+  "10": [
+    "badminton.mp3",
+    "basketball.mp3",
+    "break time.mp3",
+    "chat.mp3",
+    "chess.mp3",
+    "do.mp3",
+    "football.mp3",
+    "play.mp3",
+    "table tennis.mp3",
+    "volleyball.mp3",
+    "word puzzle.mp3"
   ]
 }

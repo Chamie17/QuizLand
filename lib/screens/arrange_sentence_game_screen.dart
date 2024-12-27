@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,13 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
       });
     } catch (e) {
       print("Error loading or parsing JSON: $e");
+      final result = await showOkAlertDialog(
+          context: context,
+          title: 'Thông báo',
+          message: 'Màn chơi hiện tại chưa ra mắt',
+          canPop: false
+      );
+      context.pop();
     }
   }
 

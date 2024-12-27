@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -99,6 +100,16 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
 
     // Load audio files for the selected level
     files = List<String>.from(audioMap[widget.level.toString()] ?? []);
+
+    if (files.isEmpty) {
+      final result = await showOkAlertDialog(
+        context: context,
+        title: 'Thông báo',
+        message: 'Màn chơi hiện tại chưa ra mắt',
+        canPop: false
+      );
+      context.pop();
+    }
 
     // Load audio titles (manually from JSON or file)
     for (var file in files) {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,17 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
       final Map<String, dynamic> audioMap = jsonDecode(jsonString);
 
       files = List<String>.from(audioMap[widget.level.toString()] ?? []);
+
+      if (files.isEmpty) {
+        final result = await showOkAlertDialog(
+            context: context,
+            title: 'Thông báo',
+            message: 'Màn chơi hiện tại chưa ra mắt',
+            canPop: false
+        );
+        context.pop();
+      }
+
       for (var file in files) {
         audioTitles[file] = file.split('.')[0];
       }
@@ -54,6 +66,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
       }
     } catch (e) {
       debugPrint("Error loading audio files: $e");
+
     }
   }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -101,6 +102,14 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
         questionDisplayCount[question] =
             (questionDisplayCount[question] ?? 0) + 1;
       }
+    } else {
+      final result = await showOkAlertDialog(
+          context: context,
+          title: 'Thông báo',
+          message: 'Màn chơi hiện tại chưa ra mắt',
+          canPop: false
+      );
+      context.pop();
     }
   }
 
@@ -371,7 +380,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
                     child: Image.asset(
                       _questions[index],
                       height: size,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
