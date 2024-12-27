@@ -156,13 +156,16 @@ class _SettingScreenState extends State<SettingScreen> {
     if (!isMute) {
       await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
-    final result = await showOkAlertDialog(
-      context: context,
-      title: 'Welcome to QuizLand',
-      message: 'QuizLand - ứng dụng học tiếng Anh tốt nhất dành cho học sinh lớp 3!\n'
-          'Tính năng nổi bật: Học từ vựng, luyện nghe, ghép câu.\n'
-          'Liên hệ: pecham1703@gmail.com\n'
-          'Cảm ơn bạn đã đồng hành cùng QuizLand!\n',
+
+    await showDialog(
+        context: context,
+        builder: (_) => Dialog(
+          backgroundColor: Colors.transparent,
+          child: GestureDetector(
+            onTap: () => context.pop(),
+            child: Image.asset('assets/images/about_board.png')
+          ),
+        )
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:quizland_app/screens/menu_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -88,13 +89,13 @@ class _HomeBodyState extends State<HomeBody>
             contents: [
               TargetContent(
                   align: ContentAlign.bottom,
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         "Nhà âm nhạc",
-                        style: TextStyle(
+                        style: GoogleFonts.lalezar(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 36.0
@@ -106,10 +107,10 @@ class _HomeBodyState extends State<HomeBody>
                             "•	Nhấp chọn nghe các âm thanh.\n\n"
                             "•	Chọn từ đúng với nghĩa của âm thanh đó.\n\n"
                             "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
-                          style: TextStyle(
+                          style: GoogleFonts.lalezar(
                             fontSize: 24,
                               color: Colors.white,
-                            fontStyle: FontStyle.italic,
+                            // fontStyle: FontStyle.italic,
                           ),),
                       )
                     ],
@@ -126,13 +127,13 @@ class _HomeBodyState extends State<HomeBody>
             contents: [
               TargetContent(
                   align: ContentAlign.left,
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         "Nhà từ vựng",
-                        style: TextStyle(
+                        style: GoogleFonts.lalezar(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 36.0
@@ -144,7 +145,7 @@ class _HomeBodyState extends State<HomeBody>
                             "•	Nhấp chọn nghe âm thanh.\n\n"
                             "•	Sắp xếp các mảnh chữ cái thành từ vựng mà bạn nghe được.\n\n"
                             "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
-                          style: TextStyle(
+                          style: GoogleFonts.lalezar(
                             fontSize: 24,
                             color: Colors.white,
                             fontStyle: FontStyle.italic,
@@ -166,13 +167,13 @@ class _HomeBodyState extends State<HomeBody>
               TargetContent(
                   align: ContentAlign.custom,
                   customPosition: CustomTargetContentPosition(top: 0, right: 0, left: 200),
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         "Nhà giao tiếp",
-                        style: TextStyle(
+                        style: GoogleFonts.lalezar(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 36.0
@@ -184,7 +185,7 @@ class _HomeBodyState extends State<HomeBody>
                             "•	Đọc câu tiếng việt được cung cấp.\n\n"
                             "•	Sắp xếp các mảnh từ bên dưới thành 1 câu tiếng anh đúng nghĩa và ngữ pháp.\n\n"
                             "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
-                          style: TextStyle(
+                          style: GoogleFonts.lalezar(
                             fontSize: 24,
                             color: Colors.white,
                             fontStyle: FontStyle.italic,
@@ -205,13 +206,13 @@ class _HomeBodyState extends State<HomeBody>
               TargetContent(
                 customPosition: CustomTargetContentPosition(top: 50),
                   align: ContentAlign.custom,
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         "Nhà kết nối",
-                        style: TextStyle(
+                        style: GoogleFonts.lalezar(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 36.0
@@ -222,7 +223,7 @@ class _HomeBodyState extends State<HomeBody>
                         child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
                             "•	Ghép nối các hình ảnh với từ vựng tiếng anh của nó.\n\n"
                             "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
-                          style: TextStyle(
+                          style: GoogleFonts.lalezar(
                             fontSize: 24,
                             color: Colors.white,
                             fontStyle: FontStyle.italic,
