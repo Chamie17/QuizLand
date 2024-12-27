@@ -136,7 +136,6 @@ Map<int, List<String>> matchingLevel = {
   13: [
     'bathroom.jpg',
     'bedroom.jpg',
-    'big.jpg',
     'chair.jpg',
     'here.jpg',
     'house.jpg',
@@ -145,7 +144,6 @@ Map<int, List<String>> matchingLevel = {
     'lamp.jpg',
     'living room.jpg',
     'on.jpg',
-    'room.jpg',
     'table.jpg',
     'teddy bear.jpg',
     'there.jpg'
@@ -154,7 +152,9 @@ Map<int, List<String>> matchingLevel = {
     'bed.jpg',
     'desk.jpg',
     'door.jpg',
+    'big.jpg',
     'new.jpg',
+    'room.jpg',
     'old.jpg',
     'small.jpg',
     'window.jpg',
