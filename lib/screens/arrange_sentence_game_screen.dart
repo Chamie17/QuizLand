@@ -48,13 +48,11 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
         initializeGame();
       });
     } catch (e) {
-      print("Error loading or parsing JSON: $e");
       final result = await showOkAlertDialog(
           context: context,
           title: 'Thông báo',
           message: 'Màn chơi hiện tại chưa ra mắt',
-          canPop: false
-      );
+          canPop: false);
       context.pop();
     }
   }
@@ -69,12 +67,12 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
 
   void resetCurrentQuestion() {
     setState(() {
-      initializeGame(); // Reinitialize the question-answer interface
-      showWarning = false; // Remove warning image
+      initializeGame();
+      showWarning = false;
     });
   }
 
-  void triggerWarningEffect() async{
+  void triggerWarningEffect() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
       await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'));
@@ -84,25 +82,25 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     });
 
     if (await Vibration.hasVibrator() ?? false) {
-    Vibration.vibrate(duration: 500); // Vibrate for 500 milliseconds
+      Vibration.vibrate(duration: 500);
     }
 
     Future.delayed(const Duration(milliseconds: 300), () {
       setState(() {
-        warningScale = 1.5; // Zoom out
+        warningScale = 1.5;
       });
     });
 
     Future.delayed(const Duration(milliseconds: 700), () {
       setState(() {
-        warningScale = 1.0; // Zoom in
+        warningScale = 1.0;
       });
     });
 
     Future.delayed(const Duration(seconds: 1), resetCurrentQuestion);
   }
 
-  void onWordSelected(String word, int index) async{
+  void onWordSelected(String word, int index) async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
       await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'));
@@ -116,7 +114,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     });
   }
 
-  void onWordRemoved(int index) async{
+  void onWordRemoved(int index) async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
       await AudioPlayer().play(AssetSource('sound_effects/click_sound_2.mp3'));
@@ -138,7 +136,7 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     return userAnswer == questionAnswers[currentQuestionIndex].answer.trim();
   }
 
-  void goToNextQuestion() async{
+  void goToNextQuestion() async {
     if (currentQuestionIndex < questionAnswers.length - 1) {
       setState(() {
         currentQuestionIndex++;
@@ -171,20 +169,21 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     });
   }
 
-  void handleCheckAnswer() async{
+  void handleCheckAnswer() async {
     if (checkAnswer()) {
       bool isMute = prefs.getBool('isMute') ?? false;
       if (!isMute) {
-        await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'));
+        await AudioPlayer()
+            .play(AssetSource('sound_effects/correct_sound_1.mp3'));
       }
       goToNextQuestion();
       setState(() {
-        correctAnswers++;  // Increment correct answers
+        correctAnswers++;
       });
     } else {
       triggerWarningEffect();
       setState(() {
-        incorrectAnswers++;  // Increment incorrect answers
+        incorrectAnswers++;
       });
     }
   }
@@ -214,7 +213,6 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
               fit: BoxFit.fill,
             ),
           ),
-
 
           Positioned(
               top: 60,
@@ -253,15 +251,18 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.black)
-                ),
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.black)),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Đúng: $correctAnswers',
-                    style: TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold, ),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -275,19 +276,21 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
                 decoration: BoxDecoration(
                     color: Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.black)
-                ),
+                    border: Border.all(color: Colors.black)),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Sai: $incorrectAnswers',
-                    style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
             ),
           ),
-          // Main Content
+
           Column(
             children: [
               Padding(
@@ -321,8 +324,15 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
-                            border: selectedWords[index] != null ? Border.all(color: Colors.transparent, width: 3) : BorderDirectional(bottom: BorderSide(color: Colors.black, width: 2)),
-                            borderRadius: selectedWords[index] != null ? BorderRadius.circular(8) : null,
+                            border: selectedWords[index] != null
+                                ? Border.all(
+                                    color: Colors.transparent, width: 3)
+                                : const BorderDirectional(
+                                    bottom: BorderSide(
+                                        color: Colors.black, width: 2)),
+                            borderRadius: selectedWords[index] != null
+                                ? BorderRadius.circular(8)
+                                : null,
                             color: selectedWords[index] != null
                                 ? Colors.yellow[100]
                                 : Colors.transparent,
@@ -362,7 +372,8 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
                         ),
                         child: Text(
                           shuffledWords[index],
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                     );
@@ -374,9 +385,13 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
               Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Color(0xFFfe68b2)),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFfe68b2)),
                   onPressed: handleCheckAnswer,
-                  child: const Text("Kiểm tra đáp án", style: TextStyle(color: Colors.white),),
+                  child: const Text(
+                    "Kiểm tra đáp án",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],

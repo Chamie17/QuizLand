@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quizland_app/services/user_serivce.dart';
 import 'package:shimmer/shimmer.dart';
+
 import '../services/user_profile_service.dart';
 
 class DetailRankScreen extends StatefulWidget {
@@ -139,7 +140,7 @@ isLoading = false;
                                   const Icon(Icons.error),
                                 ),
                               ),
-                              SizedBox(width: 32),
+                              const SizedBox(width: 32),
                               Text("${user['name']}\n${topUsers[index]['totalscore']}đ"),
                             ],
                           ),
@@ -191,7 +192,7 @@ isLoading = false;
                         const Icon(Icons.error),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 32,
                     ),
                     Text("${me['name']}\n"

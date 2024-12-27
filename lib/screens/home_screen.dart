@@ -4,8 +4,9 @@ import 'package:quizland_app/components/home_body.dart';
 import 'package:quizland_app/screens/dictionary_screen.dart';
 import 'package:quizland_app/screens/rank_screen.dart';
 import 'package:quizland_app/screens/setting_screen.dart';
-import '../services/audio_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../services/audio_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

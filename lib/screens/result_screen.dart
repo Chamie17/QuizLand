@@ -4,13 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quizland_app/models/user_profile.dart';
-import 'package:quizland_app/screens/matching_game_screen.dart';
-import 'package:quizland_app/screens/word_input_game_screen.dart';
 import 'package:quizland_app/services/user_profile_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'arrange_sentence_game_screen.dart';
-import 'listening_game_screen.dart';
 import 'menu_screen.dart';
 
 class ResultScreen extends StatefulWidget {
@@ -116,26 +112,26 @@ class _ResultScreenState extends State<ResultScreen> {
     switch (widget.game) {
       case 'matching':
         Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            MenuScreen(backgroundColor: Color(0xFFd5c1a6),
+            MenuScreen(backgroundColor: const Color(0xFFd5c1a6),
               boxColor: Colors.yellowAccent,
               gameName: 'matching',),));
         break;
       case 'listen':
         Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            MenuScreen(backgroundColor: Color(0xFF75cde8),
-              boxColor: Color(0xFFf5f05e),
+            MenuScreen(backgroundColor: const Color(0xFF75cde8),
+              boxColor: const Color(0xFFf5f05e),
               gameName: 'listen',),));
         break;
       case 'wordInput':
         Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            MenuScreen(backgroundColor: Color(0xFFc1a3ef),
-              boxColor: Color(0xFFefa13e),
+            MenuScreen(backgroundColor: const Color(0xFFc1a3ef),
+              boxColor: const Color(0xFFefa13e),
               gameName: 'wordInput',),));
         break;
       case 'arrangeSentence':
         Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            MenuScreen(backgroundColor: Color(0xFF80b2b3),
-              boxColor: Color(0xFFc56980),
+            MenuScreen(backgroundColor: const Color(0xFF80b2b3),
+              boxColor: const Color(0xFFc56980),
               gameName: 'arrangeSentence',),));
         break;
     }
@@ -181,13 +177,13 @@ class _ResultScreenState extends State<ResultScreen> {
                   Text(
                     "Đúng: ${widget.correct} lần",
                     style: GoogleFonts.pacifico(
-                      textStyle: TextStyle(fontSize: 32, color: Colors.white),
+                      textStyle: const TextStyle(fontSize: 32, color: Colors.white),
                     ),
                   ),
                   Text(
                     "Sai: ${widget.incorrect} lần",
                     style: GoogleFonts.pacifico(
-                      textStyle: TextStyle(fontSize: 32, color: Colors.white),
+                      textStyle: const TextStyle(fontSize: 32, color: Colors.white),
                     ),
                   ),
                   const Divider(
@@ -199,7 +195,7 @@ class _ResultScreenState extends State<ResultScreen> {
                   Text(
                     "Tổng điểm: ${getTotal()}đ",
                     style: GoogleFonts.pacifico(
-                      textStyle: TextStyle(fontSize: 32, color: Colors.white),
+                      textStyle: const TextStyle(fontSize: 32, color: Colors.white),
                     ),
                   ),
                 ],
@@ -248,7 +244,7 @@ class _ResultScreenState extends State<ResultScreen> {
                           TextStyle(fontSize: 24, color: Colors.brown.shade800),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 24,
                   ),
                   Text(
@@ -258,7 +254,7 @@ class _ResultScreenState extends State<ResultScreen> {
                           TextStyle(fontSize: 24, color: Colors.brown.shade800),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 24,
                   ),
                   Text(

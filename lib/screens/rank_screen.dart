@@ -6,6 +6,7 @@ import 'package:quizland_app/screens/detail_rank_screen.dart';
 import 'package:quizland_app/services/user_serivce.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
+
 import '../services/user_profile_service.dart';
 
 class RankScreen extends StatefulWidget {
@@ -53,7 +54,6 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
     );
     _controller1.repeat(reverse: true);
 
-    // Second animation variation: Faster zoom-in/zoom-out effect
     _controller2 = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
@@ -63,7 +63,6 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
     );
     _controller2.repeat(reverse: true);
 
-    // Third animation variation: Slower, more exaggerated zoom-in/zoom-out effect
     _controller3 = AnimationController(
       duration: const Duration(seconds: 1, milliseconds: 500),
       vsync: this,
@@ -172,7 +171,6 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
             ),
           ),
 
-          // Apply first animation to the third avatar and frame
           users.isNotEmpty
               ? Positioned(
                   left: 89,
@@ -202,7 +200,6 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
                   child: CircularProgressIndicator(),
                 ),
 
-          // Apply second animation to the first avatar and frame (faster effect)
           users.isNotEmpty
               ? Positioned(
                   left: 177,
@@ -232,7 +229,6 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
                   child: CircularProgressIndicator(),
                 ),
 
-          // Apply third animation to the second avatar and frame (slower and more exaggerated)
           users.isNotEmpty
               ? Positioned(
                   right: 87,
@@ -262,7 +258,6 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
                   child: CircularProgressIndicator(),
                 ),
 
-          // Medals and Frames (Apply the same animations to frames)
           Positioned(
             left: 90,
             bottom: 350,
@@ -381,7 +376,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
                           child: Text(
                             users.isNotEmpty ? users[2]['name'] : "Loading...",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 18,
                                 overflow: TextOverflow.ellipsis,
                                 fontWeight: FontWeight.bold),
@@ -402,7 +397,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
                           child: Text(
                             users.isNotEmpty ? users[0]['name'] : "Loading...",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 18,
                                 overflow: TextOverflow.ellipsis,
                                 fontWeight: FontWeight.bold),
@@ -423,7 +418,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
                           child: Text(
                             users.isNotEmpty ? users[1]['name'] : "Loading...",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 18,
                                 overflow: TextOverflow.ellipsis,
                                 fontWeight: FontWeight.bold),
@@ -443,7 +438,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
               child: ElevatedButton(
                 onPressed: () => _handleButton('matching'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFd5c1a6),
+                  backgroundColor: const Color(0xFFd5c1a6),
                   side: const BorderSide(
                     color: Colors.white,
                     width: 1,
@@ -467,7 +462,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
               child: ElevatedButton(
                 onPressed: () => _handleButton('arrangeSentence'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF80b2b3),
+                  backgroundColor: const Color(0xFF80b2b3),
                   side: const BorderSide(
                     color: Colors.white,
                     width: 1,
@@ -491,7 +486,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
               child: ElevatedButton(
                 onPressed: () => _handleButton('wordInput'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFc1a3ef),
+                  backgroundColor: const Color(0xFFc1a3ef),
                   side: const BorderSide(
                     color: Colors.white,
                     width: 1,

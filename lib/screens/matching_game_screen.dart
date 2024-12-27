@@ -1,17 +1,14 @@
-import 'dart:convert';
 import 'dart:math';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
-import 'package:quizland_app/screens/welcome_screen.dart';
-import 'package:quizland_app/services/question_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
+
 import '../utils/matching_level.dart';
 
 class MatchingGameScreen extends StatefulWidget {
@@ -40,9 +37,10 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   List<String> _originalAnswers = [];
   int _point = 0;
   int _minus = 0;
-  final int _roundSize = 3; // Number of pairs per round
-  int _roundsRemaining = 7; // Tracks remaining rounds
+  final int _roundSize = 3;
+  int _roundsRemaining = 7;
   late SharedPreferences prefs;
+  Map<String, int> questionDisplayCount = {};
 
   @override
   void initState() {
@@ -58,13 +56,11 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
 
   void init() async {
     prefs = await SharedPreferences.getInstance();
-    // Initialize the AnimationController
     _controller_worm = AnimationController(
-      duration: Duration(seconds: 8), // Animation duration
+      duration: const Duration(seconds: 8),
       vsync: this,
     );
 
-    // Define the animation from screen width to -100 (off-screen)
     _animation_worm = Tween<double>(
       begin: -100,
       end: 400, // Moving off-screen to the left
@@ -73,7 +69,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       curve: Curves.easeInOut,
     ));
 
-    // Start the animation
     _controller_worm.repeat();
 
     if (matchingLevel.containsKey(widget.level)) {
@@ -81,23 +76,19 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       final List<String> images =
       matchingLevel[widget.level]!.map((e) => folderPath + e).toList();
 
-      // Extract base names (without extensions) for answers
       final List<String> answers = images
           .map((image) => image.split('/').last.split('.').first)
           .toList();
 
       setState(() {
-        _originalQuestions = List.from(images); // Copy the original questions
-        _originalAnswers = List.from(answers); // Copy the original answers
+        _originalQuestions = List.from(images);
+        _originalAnswers = List.from(answers);
       });
 
-      // Initialize the display count for all questions
       _initializeQuestionDisplayCount();
 
-      // Load the first round
       _loadNextRound();
 
-      // Update the display count for questions in the first round
       for (String question in _questions) {
         questionDisplayCount[question] =
             (questionDisplayCount[question] ?? 0) + 1;
@@ -113,12 +104,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     }
   }
 
-
-  // Add this to track the display count (already existing in your code)
-  Map<String, int> questionDisplayCount = {};
-
   void _initializeQuestionDisplayCount() {
-    // Initialize display count for all questions
     for (String question in _originalQuestions) {
       questionDisplayCount[question] = 0;
     }
@@ -126,64 +112,50 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
 
   void _loadNextRound() {
     if (_roundsRemaining <= 0) {
-      // All rounds completed
       _showCompletionDialog();
       return;
     }
 
     setState(() {
       final random = Random();
-
-      // Ensure you have at least 3 pairs of questions/answers for each round
       final roundSize = min(_roundSize, _originalQuestions.length);
 
       List<String> roundQuestions = [];
       List<String> roundAnswers = [];
 
-      // Copy the list of unused questions
       List<String> unusedQuestions = List.from(_originalQuestions);
 
-      // Shuffle the questions to get random selection
       unusedQuestions.shuffle(random);
 
-      // Select questions ensuring each is shown at least once
       for (int i = 0; i < roundSize; i++) {
         bool questionSelected = false;
-
-        // Try to select a question that has been displayed less than once
         for (String question in unusedQuestions) {
           if ((questionDisplayCount[question] ?? 0) < 1) {
             roundQuestions.add(question);
             roundAnswers.add(_originalAnswers[_originalQuestions.indexOf(question)]);
 
-            // Update the display count
             questionDisplayCount[question] = (questionDisplayCount[question] ?? 0) + 1;
 
             questionSelected = true;
-            unusedQuestions.remove(question); // Remove the question from unused pool
+            unusedQuestions.remove(question);
             break;
           }
         }
 
-        // If no question with less than 1 display is available, use any question
         if (!questionSelected && unusedQuestions.isNotEmpty) {
-          String question = unusedQuestions.removeLast(); // Select any remaining question
+          String question = unusedQuestions.removeLast();
           roundQuestions.add(question);
           roundAnswers.add(_originalAnswers[_originalQuestions.indexOf(question)]);
 
-          // Update the display count
           questionDisplayCount[question] = (questionDisplayCount[question] ?? 0) + 1;
         }
       }
 
-      // Shuffle answers to make the game more challenging
       roundAnswers.shuffle(random);
 
-      // Update the round data
       _questions = roundQuestions;
       _answers = roundAnswers;
 
-      // Initialize match status for this round
       _questionMatched = List<bool>.filled(roundQuestions.length, false);
       _answerMatched = List<bool>.filled(roundAnswers.length, false);
       _questionSelected = List<bool>.filled(roundQuestions.length, false);
@@ -191,12 +163,10 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       _selectedQuestions.clear();
       _selectedAnswers.clear();
 
-      _roundsRemaining--; // Decrease remaining rounds
+      _roundsRemaining--;
     });
   }
 
-
-// Log the display counts when needed (for debugging)
   void _logQuestionDisplayCounts() {
     questionDisplayCount.forEach((question, count) {
       print('Question: $question displayed $count times');
@@ -205,22 +175,15 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
 
   void resetGame() {
     setState(() {
-      // Reset scores
       _point = 0;
       _minus = 0;
-
-      // Reset rounds remaining
       _roundsRemaining = 7;
-
-      // Reset the selected state for questions and answers
       _selectedQuestions.clear();
       _selectedAnswers.clear();
       _questionMatched = [];
       _answerMatched = [];
       _questionSelected = [];
       _answerSelected = [];
-
-      // Reload the next round with fresh state
       _loadNextRound();
     });
   }
@@ -251,7 +214,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     if (_questionMatched[index]) return;
 
     setState(() {
-      // Toggle the selection state for the question
       _questionSelected[index] = !_questionSelected[index];
       _selectedQuestions.add(_questions[index]);
     });
@@ -266,7 +228,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     if (_answerMatched[index]) return;
 
     setState(() {
-      // Toggle the selection state for the answer
       _answerSelected[index] = !_answerSelected[index];
       _selectedAnswers.add(_answers[index]);
     });
@@ -309,17 +270,16 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
           final answerIndex = _answers.indexOf(answer);
           _questionMatched[questionIndex] = false;
           _answerMatched[answerIndex] = false;
-          _showIncorrectImage = true; // Show the incorrect image
+          _showIncorrectImage = true;
         });
 
         if (await Vibration.hasVibrator() ?? false) {
-          Vibration.vibrate(duration: 500); // Vibrate for 500 milliseconds
+          Vibration.vibrate(duration: 500);
         }
 
-        // Reset the image visibility after 1 second
         Future.delayed(const Duration(seconds: 1), () {
           setState(() {
-            _showIncorrectImage = false; // Hide the incorrect image
+            _showIncorrectImage = false;
           });
         });
 
@@ -336,16 +296,13 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     }
   }
 
-
-
   Widget _buildQuestion(int index) {
     final bool isSelected = _questionSelected[index];
     final bool isMatched = _questionMatched[index];
     final bool isIncorrect =
-        !isMatched && isSelected; // Simplified incorrect match check
-    final double size = isSelected ? 180 : 170; // Increase size when selected
+        !isMatched && isSelected;
+    final double size = isSelected ? 180 : 170;
 
-    // Set background color: Green for correct, Red for incorrect, Transparent otherwise
     final Color backgroundColor = isMatched
         ? Colors.green
         : (isIncorrect ? Colors.red : Colors.transparent);
@@ -354,7 +311,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       onTap: () => _onSelectQuestion(index),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-            vertical: 16), // Reduced padding for balance
+            vertical: 16),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
@@ -363,12 +320,11 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius:
-                BorderRadius.circular(12), // Slightly more rounded corners
+                BorderRadius.circular(12),
           ),
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // The image itself
               AnimatedOpacity(
                 opacity: isMatched ? 0 : 1,
                 duration: const Duration(milliseconds: 300),
@@ -385,12 +341,12 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
                   ),
                 ),
               ),
-              // Image overlay when match is correct (green background)
+
               if (isMatched)
                 Positioned(
                   child: Image.asset(
                     'assets/images/correct_icon.png',
-                    width: 100, // Adjusted size of overlay image
+                    width: 100,
                     height: 100,
                     fit: BoxFit.contain,
                   ),
@@ -406,10 +362,9 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     final bool isSelected = _answerSelected[index];
     final bool isMatched = _answerMatched[index];
     final bool isIncorrect =
-        !isMatched && isSelected; // Simplified incorrect match check
-    final double size = isSelected ? 180 : 170; // Increase size when selected
+        !isMatched && isSelected;
+    final double size = isSelected ? 180 : 170;
 
-    // Set background color: Green for correct, Red for incorrect, Transparent otherwise
     final Color backgroundColor = isMatched
         ? Colors.green
         : (isIncorrect ? Colors.red : Colors.transparent);
@@ -418,7 +373,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
       onTap: () => _onSelectAnswer(index),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-            vertical: 16), // Reduced padding for consistency
+            vertical: 16),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
@@ -427,12 +382,12 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius:
-                BorderRadius.circular(12), // Slightly more rounded corners
+                BorderRadius.circular(12),
           ),
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // The answer text itself
+
               AnimatedOpacity(
                 opacity: isMatched ? 0 : 1,
                 duration: const Duration(milliseconds: 300),
@@ -451,7 +406,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
                   ),
                 ),
               ),
-              // Image overlay when match is correct (green background)
+
               if (isMatched)
                 Positioned(
                   child: Image.asset(
@@ -564,7 +519,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
           _buildScore(),
           Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 64,
               ),
               _buildGameBoard(),

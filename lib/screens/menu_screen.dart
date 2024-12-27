@@ -109,7 +109,7 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
     return Scaffold(
       body: Stack(
         children: [
-          // Background Color
+
           Container(
             color: widget.backgroundColor,
           ),
@@ -191,7 +191,7 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
 
                     return InkWell(
                       onTap: () {
-                        if (!isLevelUnlocked) {
+                        if (isLevelUnlocked) {
                           _handleEnterGameScreen(index + 1);
                         } else {
                           _handleEnterLockedLevel();

@@ -1,11 +1,7 @@
-import 'package:bcrypt/bcrypt.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 
-import '../models/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 
 final UserService userService = UserService();
 

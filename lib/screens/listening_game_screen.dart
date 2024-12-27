@@ -1,17 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math'; // For random selection
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart'; // Import the vibration package
-import 'dart:math'; // For random selection
 
 class ListeningGameScreen extends StatefulWidget {
   ListeningGameScreen({super.key, required this.level});
@@ -56,7 +57,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
     super.initState();
     // Initialize the AnimationController
     _controller = AnimationController(
-      duration: Duration(seconds: 10), // Animation duration
+      duration: const Duration(seconds: 10), // Animation duration
       vsync: this,
     );
 
@@ -73,7 +74,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
     _controller.repeat();
 
     _controller2 = AnimationController(
-      duration: Duration(seconds: 8), // Animation duration
+      duration: const Duration(seconds: 8), // Animation duration
       vsync: this,
     );
 
@@ -138,28 +139,15 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
 
   void resetGame() {
     setState(() {
-      // Reset the round counter
       roundsRemaining = 7;
-
-      // Reset the correct and incorrect answer counters
       correctAnswers = 0;
       incorrectAnswers = 0;
-
-      // Clear the list of answered pairs
       answeredPairs.clear();
-
-      // Reset the current round files and answers
       currentRoundFiles.clear();
       currentRoundAnswers.clear();
-
-      // Reset selected audio and selected answer
       selectedAudioFile = null;
       selectedAnswer = null;
-
-      // Reset incorrect state (error image visibility)
       isIncorrect = false;
-
-      // Reload the game by initializing the round again
       loadNextRound();
     });
   }
@@ -168,7 +156,6 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
     selectedAnswer = null;
     selectedAudioFile = null;
     if (roundsRemaining <= 0) {
-      // No more rounds left
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       bool? isReplay = await context.pushNamed('result', pathParameters: {
@@ -186,35 +173,28 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
       return;
     }
 
-    // Handle rounds based on round logic
     if (roundsRemaining == 7) {
-      // Round 1: Display first 3 items
       currentRoundFiles = files.take(3).toList();
     } else if (roundsRemaining == 6) {
-      // Round 2: Display next 3 items
       currentRoundFiles = files.skip(3).take(3).toList();
     } else if (roundsRemaining == 5) {
-      // Round 3: Display 1 last item and 2 random items
       currentRoundFiles = [files[6]] + _getRandomItems(2, 5);
     } else {
-      // Rounds 4 to 7: Random 3 items from the remaining items
       currentRoundFiles = _getRandomItems(3, files.length);
     }
 
-    // Fetch metadata titles for the current round files
     currentRoundAnswers = [];
     for (var file in currentRoundFiles) {
-      final title = await getAudioTitle(file); // Fetch metadata title
+      final title = await getAudioTitle(file);
       if (title != null) {
-        currentRoundAnswers.add(title); // Add title to answers
+        currentRoundAnswers.add(title);
       }
     }
 
-    // Shuffle the answers to make them unpredictable
     currentRoundAnswers.shuffle();
 
     setState(() {});
-    roundsRemaining--; // Decrease remaining rounds
+    roundsRemaining--;
   }
 
   List<String> _getRandomItems(int count, int maxIndex) {
@@ -232,43 +212,36 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
   void playAudio(String fileName) async {
     await _audioPlayer.play(AssetSource('audio_source/${widget.level}/$fileName'));
 
-    // Set the selected audio file when it's played
     setState(() {
       selectedAudioFile = fileName;
-      selectedAnswer = null; // Reset selected answer when a new audio is played
-      isIncorrect = false; // Reset incorrect state
+      selectedAnswer = null;
+      isIncorrect = false;
     });
   }
 
   void checkAnswer(String selectedAnswerText) async {
     setState(() {
-      selectedAnswer = selectedAnswerText; // Set the selected answer
+      selectedAnswer = selectedAnswerText;
     });
 
-    // Extract the correct metadata title dynamically
     final correctTitle = await getAudioTitle(selectedAudioFile!);
 
     if (selectedAnswer == correctTitle) {
-      // Correct answer
       bool isMute = prefs.getBool('isMute') ?? false;
       if (!isMute) {
         await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'));
       }
       setState(() {
-        correctAnswers++; // Increment correct answers count
-        // Add the correct pair to answeredPairs
+        correctAnswers++;
         answeredPairs.add(selectedAudioFile!);
-        // Remove the correct pair from current round files and answers
         currentRoundFiles.remove(selectedAudioFile);
         currentRoundAnswers.remove(selectedAnswer);
         selectedAnswer = null;
         selectedAudioFile = null;
       });
 
-      // Stop the audio immediately after selecting the correct answer
       await _audioPlayer.stop();
 
-      // If the current round is complete, move to the next round
       if (answeredPairs.length % _roundSize == 0) {
         loadNextRound();
       }
@@ -277,23 +250,21 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
       if (!isMute) {
         await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'));
       }
-      // Incorrect answer: trigger vibration and show error
+
       if (await Vibration.hasVibrator() ?? false) {
-        Vibration.vibrate(duration: 500); // Vibrate for 500 milliseconds
+        Vibration.vibrate(duration: 500);
       }
 
-      // Increment incorrect answers count
       setState(() {
-        incorrectAnswers++; // Increment incorrect answers count
-        isIncorrect = true; // Show error image
+        incorrectAnswers++;
+        isIncorrect = true;
       });
 
-      // Reset the selection and hide error image after a short delay
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         setState(() {
           selectedAudioFile = null;
-          selectedAnswer = null; // Reset the incorrect selection state
-          isIncorrect = false; // Hide error image
+          selectedAnswer = null;
+          isIncorrect = false;
         });
       });
     }
@@ -302,7 +273,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text("LISTENING GAME")),
+      appBar: AppBar(centerTitle: true, title: const Text("LISTENING GAME")),
       body: Stack(
         children: [
           SizedBox(
@@ -320,8 +291,8 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                 child: SizedBox(
                   height: 50,
                   child: Transform(
-                    alignment: Alignment.center, // Center alignment for proper flipping
-                    transform: Matrix4.identity()..scale(-1.0, 1.0), // Flip horizontally
+                    alignment: Alignment.center,
+                    transform: Matrix4.identity()..scale(-1.0, 1.0),
                     child: Lottie.asset('assets/lottiefiles/eagle.json'),
                   ),
 
@@ -339,8 +310,8 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                 child: SizedBox(
                   height: 50,
                   child: Transform(
-                    alignment: Alignment.center, // Center alignment for proper flipping
-                    transform: Matrix4.identity()..scale(-1.0, 1.0), // Flip horizontally
+                    alignment: Alignment.center,
+                    transform: Matrix4.identity()..scale(-1.0, 1.0),
                     child: Lottie.asset('assets/lottiefiles/eagle.json'),
                   ),
 
@@ -358,8 +329,8 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                 child: SizedBox(
                   height: 50,
                   child: Transform(
-                    alignment: Alignment.center, // Center alignment for proper flipping
-                    transform: Matrix4.identity()..scale(-1.0, 1.0), // Flip horizontally
+                    alignment: Alignment.center,
+                    transform: Matrix4.identity()..scale(-1.0, 1.0),
                     child: Lottie.asset('assets/lottiefiles/eagle.json'),
                   ),
 
@@ -385,7 +356,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Error image when incorrect answer
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -401,29 +372,29 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                                 playAudio(currentRoundFiles[index]);
                               },
                               child: Container(
-                                padding: EdgeInsets.all(12),
+                                padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFF8E3A1),
+                                  color: const Color(0xFFF8E3A1),
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
                                     color: selectedAudioFile == currentRoundFiles[index]
-                                        ? Colors.green // Green border for selected audio item
+                                        ? Colors.green
                                         : Colors.orange,
                                     width: 3,
                                   ),
                                 ),
                                 child: AnimatedContainer(
-                                    duration: Duration(milliseconds: 200),
+                                    duration: const Duration(milliseconds: 200),
                                     width: selectedAudioFile == currentRoundFiles[index]
                                         ? 120
                                         : 100,
                                     alignment: Alignment.center,
                                     child: Row(children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.volume_up,
                                         color: Colors.black,
                                       ),
-                                      SizedBox(width: 10),
+                                      const SizedBox(width: 10),
                                       SizedBox(
                                         height: 30,
                                         width: 60,
@@ -437,7 +408,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                             ),
                           );
                         } else {
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
                       }),
                     ),
@@ -459,9 +430,9 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                                 checkAnswer(currentRoundAnswers[index]);
                               },
                               child: Container(
-                                padding: EdgeInsets.all(12),
+                                padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Color(0xFFF8E3A1),
+                                  color: const Color(0xFFF8E3A1),
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
                                     color: selectedAnswer == currentRoundAnswers[index]
@@ -473,7 +444,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                                 child: Center(
                                   child: Text(
                                     currentRoundAnswers[index],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center,
                                   ),
@@ -482,7 +453,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                             ),
                           );
                         } else {
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
                       }),
                     ),
@@ -513,7 +484,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Đúng: $correctAnswers',
-                    style: TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold, ),
+                    style: const TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold, ),
                   ),
                 ),
               ),
@@ -533,7 +504,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Sai: $incorrectAnswers',
-                    style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

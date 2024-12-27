@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/user_profile.dart';
 
 final UserProfileService userProfileService = UserProfileService();

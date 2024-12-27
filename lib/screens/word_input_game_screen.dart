@@ -19,7 +19,6 @@ class WordInputGameScreen extends StatefulWidget {
 }
 
 class _WordInputGameScreenState extends State<WordInputGameScreen> {
-  // final AudioPlayer _audioPlayer = AudioPlayer();
   List<String> files = [];
   Map<String, String> audioTitles = {};
   String currentTitle = "";
@@ -27,7 +26,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
   List<String> selectedLetters = [];
   int correctAnswers = 0;
   int incorrectAnswers = 0;
-  bool errorOccurred = false; // Flag to track error state
+  bool errorOccurred = false;
   late SharedPreferences prefs;
   var currentFile;
 
@@ -40,7 +39,6 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
   Future<void> init() async {
     prefs = await SharedPreferences.getInstance();
     try {
-      // Load the JSON file containing audio file paths and titles
       final String jsonString =
       await rootBundle.loadString('assets/audio_source/audio_files.json');
       final Map<String, dynamic> audioMap = jsonDecode(jsonString);
@@ -72,25 +70,19 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
 
   void resetGame() {
     setState(() {
-      // Reset the game state variables
       correctAnswers = 0;
       incorrectAnswers = 0;
       errorOccurred = false;
       selectedLetters.clear();
       shuffledLetters.clear();
-
-      // Reload the files and titles
       files = [];
       audioTitles.clear();
-
-      // Reinitialize the game by loading audio files and selecting the first one
       init();
     });
   }
 
   void loadNextAudio() async{
     if (files.isEmpty) {
-      // Show completion dialog when no files remain
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       bool? isReplay = await context.pushNamed('result', pathParameters: {
@@ -128,11 +120,9 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
     }
     setState(() {
       if (isInCenter) {
-        // Move back to shuffled letters
         selectedLetters.remove(letter);
         shuffledLetters.add(letter);
       } else {
-        // Move to the center
         shuffledLetters.remove(letter);
         selectedLetters.add(letter);
       }
@@ -146,32 +136,31 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
         await AudioPlayer().play(AssetSource('sound_effects/correct_sound_1.mp3'));
       }
       setState(() {
-        correctAnswers++; // Increment correct answer count
+        correctAnswers++;
       });
-      loadNextAudio(); // Proceed to next word
+      loadNextAudio();
     } else {
       bool isMute = prefs.getBool('isMute') ?? false;
       if (!isMute) {
         await AudioPlayer().play(AssetSource('sound_effects/wrong_sound_1.mp3'));
       }
       setState(() {
-        incorrectAnswers++; // Increment incorrect answer count
-        errorOccurred = true; // Show error image
-        selectedLetters.clear(); // Reset selected letters
+        incorrectAnswers++;
+        errorOccurred = true;
+        selectedLetters.clear();
         shuffledLetters.clear();
-        shuffledLetters.addAll(currentTitle.split('')); // Move selected letters back to shuffled letters
-        shuffledLetters.shuffle(Random()); // Shuffle shuffled letters again
+        shuffledLetters.addAll(currentTitle.split(''));
+        shuffledLetters.shuffle(Random());
       });
 
-      // Trigger vibration if the device has a vibrator
       if (await Vibration.hasVibrator() ?? false) {
-        Vibration.vibrate(duration: 500); // Vibrate for 500 milliseconds
+        Vibration.vibrate(duration: 500);
       }
 
       // Hide error image after 1 second
       Future.delayed(const Duration(seconds: 1), () {
         setState(() {
-          errorOccurred = false; // Hide error image after 1 second
+          errorOccurred = false;
         });
       });
     }
@@ -225,7 +214,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Đúng: $correctAnswers',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       color: Colors.green,
                       fontWeight: FontWeight.bold,
@@ -248,7 +237,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Sai: $incorrectAnswers',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
@@ -264,7 +253,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 72,
               ),
               // Audio Play Button
@@ -276,7 +265,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                        color: Color(0xFF1E3A8A),
+                        color: const Color(0xFF1E3A8A),
                         borderRadius: BorderRadius.circular(20)),
                     child: Row(
                       children: [
@@ -290,7 +279,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                             await AudioPlayer().play(AssetSource('audio_source/${widget.level}/$currentFile'));
                           },
                         ),
-                        Text(
+                        const Text(
                           "Nghe lại lần nữa",
                           style: TextStyle(fontSize: 24, color: Colors.white),
                           textAlign: TextAlign.center,
@@ -301,7 +290,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                 ),
               ),
 
-              Spacer(),
+              const Spacer(),
               // Drop Zone for Selected Letters
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -342,7 +331,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                 ),
               ),
 
-              Spacer(),
+              const Spacer(),
 
               // Shuffled Letters
               Wrap(
@@ -371,7 +360,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                 )
                     .toList(),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 80,
               ),
               // Check Result Button
@@ -380,7 +369,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
                 onPressed: checkResult,
                 child: const Text("Kiểm tra kết quả", style: TextStyle(color: Colors.white),),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
             ],

@@ -1,14 +1,7 @@
-import 'dart:math';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-// import 'package:just_audio/just_audio.dart';
-import 'package:lottie/lottie.dart';
-import 'package:quizland_app/screens/matching_game_screen.dart';
 import 'package:quizland_app/screens/menu_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeBody extends StatefulWidget {
@@ -45,7 +38,7 @@ class _HomeBodyState extends State<HomeBody>
     // sun
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 10),
+      duration: const Duration(seconds: 10),
     )..repeat();
     _animation = Tween<double>(begin: 0, end: 2 * 3.14159) // 0 to 360 degrees
         .animate(_controller);
@@ -95,33 +88,31 @@ class _HomeBodyState extends State<HomeBody>
             contents: [
               TargetContent(
                   align: ContentAlign.bottom,
-                  child: Container(
-                    child: const Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Nhà âm nhạc",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 36.0
-                          ),
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Nhà âm nhạc",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 36.0
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
-                              "•	Nhấp chọn nghe các âm thanh.\n\n"
-                              "•	Chọn từ đúng với nghĩa của âm thanh đó.\n\n"
-                              "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
-                            style: TextStyle(
-                              fontSize: 24,
-                                color: Colors.white,
-                              fontStyle: FontStyle.italic,
-                            ),),
-                        )
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
+                            "•	Nhấp chọn nghe các âm thanh.\n\n"
+                            "•	Chọn từ đúng với nghĩa của âm thanh đó.\n\n"
+                            "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
+                          style: TextStyle(
+                            fontSize: 24,
+                              color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                          ),),
+                      )
+                    ],
                   )
               )
             ]
@@ -135,33 +126,31 @@ class _HomeBodyState extends State<HomeBody>
             contents: [
               TargetContent(
                   align: ContentAlign.left,
-                  child: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Nhà từ vựng",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 36.0
-                          ),
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Nhà từ vựng",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 36.0
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
-                              "•	Nhấp chọn nghe âm thanh.\n\n"
-                              "•	Sắp xếp các mảnh chữ cái thành từ vựng mà bạn nghe được.\n\n"
-                              "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                              fontStyle: FontStyle.italic,
-                            ),),
-                        )
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
+                            "•	Nhấp chọn nghe âm thanh.\n\n"
+                            "•	Sắp xếp các mảnh chữ cái thành từ vựng mà bạn nghe được.\n\n"
+                            "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                          ),),
+                      )
+                    ],
                   )
               ),
 
@@ -177,33 +166,31 @@ class _HomeBodyState extends State<HomeBody>
               TargetContent(
                   align: ContentAlign.custom,
                   customPosition: CustomTargetContentPosition(top: 0, right: 0, left: 200),
-                  child: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Nhà giao tiếp",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 36.0
-                          ),
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Nhà giao tiếp",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 36.0
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
-                              "•	Đọc câu tiếng việt được cung cấp.\n\n"
-                              "•	Sắp xếp các mảnh từ bên dưới thành 1 câu tiếng anh đúng nghĩa và ngữ pháp.\n\n"
-                              "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                              fontStyle: FontStyle.italic,
-                            ),),
-                        )
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
+                            "•	Đọc câu tiếng việt được cung cấp.\n\n"
+                            "•	Sắp xếp các mảnh từ bên dưới thành 1 câu tiếng anh đúng nghĩa và ngữ pháp.\n\n"
+                            "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                          ),),
+                      )
+                    ],
                   )
               )
             ]
@@ -218,32 +205,30 @@ class _HomeBodyState extends State<HomeBody>
               TargetContent(
                 customPosition: CustomTargetContentPosition(top: 50),
                   align: ContentAlign.custom,
-                  child: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Nhà kết nối",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 36.0
-                          ),
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Nhà kết nối",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 36.0
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
-                              "•	Ghép nối các hình ảnh với từ vựng tiếng anh của nó.\n\n"
-                              "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                              fontStyle: FontStyle.italic,
-                            ),),
-                        )
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text("Tại ngôi nhà này, nhiệm vụ của bạn là: \n\n"
+                            "•	Ghép nối các hình ảnh với từ vựng tiếng anh của nó.\n\n"
+                            "Nếu trả lời đúng hết, bạn sẽ nhận được ngôi sao từ chú khỉ ⭐️⭐️⭐️",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                          ),),
+                      )
+                    ],
                   )
               )
             ]
@@ -268,12 +253,9 @@ class _HomeBodyState extends State<HomeBody>
     }
 
     TutorialCoachMark(
-      targets: targets, // List<TargetFocus>
-      colorShadow: Colors.black, // DEFAULT Colors.black
-      // alignSkip: Alignment.bottomRight,
+      targets: targets,
+      colorShadow: Colors.black,
       textSkip: "Bỏ qua",
-      // paddingFocus: 10,
-      // opacityShadow: 0.8,
       onClickTarget: (target){
         print(target);
       },
@@ -292,7 +274,7 @@ class _HomeBodyState extends State<HomeBody>
         print("finish");
       },
 
-    )..show(context:context);
+    ).show(context:context);
   }
   
   void _goToMatchingScreen() async {
@@ -300,7 +282,7 @@ class _HomeBodyState extends State<HomeBody>
     if (!isMute) {
       await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFd5c1a6), boxColor: Colors.yellowAccent, gameName: 'matching',),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: const Color(0xFFd5c1a6), boxColor: Colors.yellowAccent, gameName: 'matching',),));
   }
 
   void _goToCommunicateScreen() async {
@@ -308,7 +290,7 @@ class _HomeBodyState extends State<HomeBody>
     if (!isMute) {
       await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF80b2b3), boxColor: Color(0xFFc56980), gameName: 'arrangeSentence',),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: const Color(0xFF80b2b3), boxColor: const Color(0xFFc56980), gameName: 'arrangeSentence',),));
   }
 
   void _goToWordScreen() async {
@@ -316,7 +298,7 @@ class _HomeBodyState extends State<HomeBody>
     if (!isMute) {
       await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFFc1a3ef), boxColor: Color(0xFF90CE3E), gameName: 'wordInput',),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: const Color(0xFFc1a3ef), boxColor: const Color(0xFF90CE3E), gameName: 'wordInput',),));
   }
 
   void _goToMusicScreen() async {
@@ -324,7 +306,7 @@ class _HomeBodyState extends State<HomeBody>
     if (!isMute) {
       await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: Color(0xFF75cde8), boxColor: Color(0xFFf5f05e), gameName: 'listen',),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen(backgroundColor: const Color(0xFF75cde8), boxColor: const Color(0xFFf5f05e), gameName: 'listen',),));
   }
 
   @override

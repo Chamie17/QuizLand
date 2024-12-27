@@ -41,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           fontFamily: 'PlaywriteFRModerne',
                           fontWeight: FontWeight.bold),
                     ),
-                    Container(
+                    SizedBox(
                       height: 300,
                       child: Image.asset(
                         "assets/images/register_screen.png",
@@ -49,7 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    RegisterForm()
+                    const RegisterForm()
                   ],
                 ),
               ),

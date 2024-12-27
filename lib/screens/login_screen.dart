@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quizland_app/components/login_form.dart';
-import 'package:quizland_app/utils/my_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -51,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 80),
-                    LoginForm()
+                    const LoginForm()
                   ],
                 ),
               ),

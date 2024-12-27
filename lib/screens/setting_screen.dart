@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,7 +17,7 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   final AudioManager _audioManager = AudioManager(); // Instance of AudioManager
-  TextEditingController _nameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   List<String> avatarImageNames = [
     'boy1.png',
     'boy2.png',
@@ -108,7 +106,6 @@ class _SettingScreenState extends State<SettingScreen> {
     final avatarImageUrls = await _avatarImageUrls;
 
     if (avatarImageUrls.isEmpty) {
-      print('chưa load');
       return;
     }
 
@@ -116,7 +113,7 @@ class _SettingScreenState extends State<SettingScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Chọn ảnh đại diện'),
+          title: const Text('Chọn ảnh đại diện'),
           content: SingleChildScrollView(
             child: Column(
               children: avatarImageUrls.map((avatarUrl) {
@@ -135,8 +132,8 @@ class _SettingScreenState extends State<SettingScreen> {
                       width: 300,
                       height: 300,
                       placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => const Icon(Icons.error),
                     ),
                   ),
                 );
@@ -233,7 +230,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             Expanded(
                               child: Text(
                                 'Chào bé ${_currentUser?.displayName ?? ''}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -245,7 +242,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             ),
                             IconButton(
                               onPressed: _handleChangeName,
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.edit,
                                 size: 20,
                                 color: Colors.white,
@@ -258,7 +255,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
@@ -284,16 +281,16 @@ class _SettingScreenState extends State<SettingScreen> {
                               Icon(_audioManager.isMute
                                   ? Icons.volume_off
                                   : Icons.volume_up, color: Colors.black),
-                              SizedBox(width: 10),
-                              Text("Âm thanh", style: TextStyle(color: Colors.black),),
+                              const SizedBox(width: 10),
+                              const Text("Âm thanh", style: TextStyle(color: Colors.black),),
                             ],
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.yellow,
-                              minimumSize: Size(double.maxFinite, 50),
+                              minimumSize: const Size(double.maxFinite, 50),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16))),
                           onPressed: () async {
@@ -305,20 +302,20 @@ class _SettingScreenState extends State<SettingScreen> {
                               Icon(_audioManager.isMusicPlaying
                                   ? Icons.music_note
                                   : Icons.music_off, color: Colors.black),
-                              SizedBox(width: 10),
-                              Text("Nhạc nền", style: TextStyle(color: Colors.black),),
+                              const SizedBox(width: 10),
+                              const Text("Nhạc nền", style: TextStyle(color: Colors.black),),
                             ],
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.yellow,
-                              minimumSize: Size(double.maxFinite, 50),
+                              minimumSize: const Size(double.maxFinite, 50),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16))),
                           onPressed: _handleAbout,
-                          child: Row(
+                          child: const Row(
                             children: [
                               Icon(Icons.help, color: Colors.black),
                               SizedBox(width: 10),
@@ -326,12 +323,12 @@ class _SettingScreenState extends State<SettingScreen> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 16),
-                        Spacer(),
+                        const SizedBox(height: 16),
+                        const Spacer(),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.yellow,
-                              minimumSize: Size(double.maxFinite, 50),
+                              minimumSize: const Size(double.maxFinite, 50),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16))),
                           onPressed: () async {
@@ -339,7 +336,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             FirebaseAuth.instance.signOut();
                             context.pushReplacementNamed('login');
                           },
-                          child: Text("Đăng xuất", style: TextStyle(color: Colors.black),),
+                          child: const Text("Đăng xuất", style: TextStyle(color: Colors.black),),
                         ),
                       ],
                     ),

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quizland_app/screens/login_screen.dart';
-import 'package:quizland_app/screens/register_screen.dart';
-import 'package:quizland_app/utils/app_router.dart';
 import 'package:quizland_app/utils/my_button.dart';
 
 class WelcomeScreen extends StatefulWidget {

@@ -1,9 +1,6 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:quizland_app/screens/home_screen.dart';
-import 'package:quizland_app/screens/welcome_screen.dart';
 import 'package:quizland_app/services/audio_manager.dart';
 import 'package:quizland_app/utils/app_router.dart';
 import 'package:quizland_app/utils/app_theme.dart';
@@ -31,7 +28,7 @@ void main() async{
 
   await AudioManager().init();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

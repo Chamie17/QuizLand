@@ -113,7 +113,7 @@ class _DetailWordScreenState extends State<DetailWordScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Từ điển QuizLand"),
+        title: const Text("Từ điển QuizLand"),
         backgroundColor: Colors.purple.shade200,
       ),
       body: isLoading

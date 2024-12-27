@@ -1,13 +1,9 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:bcrypt/bcrypt.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:quizland_app/services/user_serivce.dart';
 import 'package:quizland_app/utils/my_text_form_field.dart';
 
-import '../models/user.dart';
 import '../utils/my_button.dart';
 
 class LoginForm extends StatefulWidget {
@@ -148,7 +144,7 @@ class _LoginFormState extends State<LoginForm> {
               ],
             ),
             _isLoading
-                ? CircularProgressIndicator()
+                ? const CircularProgressIndicator()
                 : MyButton(
                     text: "Đăng nhập",
                     onPressed: _handleLogin,
