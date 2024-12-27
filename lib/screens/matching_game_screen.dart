@@ -296,12 +296,20 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     }
   }
 
+
+
   Widget _buildQuestion(int index) {
     final bool isSelected = _questionSelected[index];
     final bool isMatched = _questionMatched[index];
     final bool isIncorrect =
         !isMatched && isSelected;
-    final double size = isSelected ? 180 : 170;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final baseWidth = 1280.0;
+
+    double widthScaleFactor = screenWidth / baseWidth;
+    final double size = (isSelected) ? 620 * widthScaleFactor : 600 * widthScaleFactor;
 
     final Color backgroundColor = isMatched
         ? Colors.green
@@ -363,7 +371,12 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     final bool isMatched = _answerMatched[index];
     final bool isIncorrect =
         !isMatched && isSelected;
-    final double size = isSelected ? 180 : 170;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final baseWidth = 1280.0;
+
+    double widthScaleFactor = screenWidth / baseWidth;
+    final double size = (isSelected) ? 620 * widthScaleFactor : 600 * widthScaleFactor;
 
     final Color backgroundColor = isMatched
         ? Colors.green

@@ -15,9 +15,9 @@ import '../services/user_profile_service.dart';
 class MenuScreen extends StatefulWidget {
   MenuScreen(
       {super.key,
-      required this.backgroundColor,
-      required this.boxColor,
-      required this.gameName});
+        required this.backgroundColor,
+        required this.boxColor,
+        required this.gameName});
   Color backgroundColor;
   Color boxColor;
   String gameName;
@@ -106,16 +106,23 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
     bool isNewUser = gameHistory.isEmpty;
     int unlockedLevel = gameHistory.isNotEmpty ? gameHistory.length + 1 : 1;
 
+    // Get screen size and calculate scaling factors
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    double scaleWidth(double width) => width * screenWidth / 1280;
+    double scaleHeight(double height) => height * screenHeight / 2856;
+    double fontSize = scaleWidth(300);
+
     return Scaffold(
       body: Stack(
         children: [
-
           Container(
             color: widget.backgroundColor,
           ),
           Positioned(
             left: 0,
-            top: 30,
+            top: scaleHeight(50), // Scaled top margin
             child: IconButton(
               onPressed: () async {
                 bool isMute = prefs.getBool('isMute') ?? false;
@@ -126,26 +133,26 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
               },
               icon: Image.asset(
                 'assets/images/arrow_back.png',
-                height: 60,
+                height: scaleHeight(200),
               ),
             ),
           ),
           Positioned(
             right: 0,
-            child: Lottie.asset('assets/lottiefiles/monkey_top.json', height: 220),
+            child: Lottie.asset('assets/lottiefiles/monkey_top.json', height: scaleHeight(700)),
           ),
-          const Positioned(
-            left: 65,
-            top: 85,
+          Positioned(
+            left: scaleWidth(200),
+            top: scaleHeight(300),
             child: Text(
               "Levels",
-              style: TextStyle(fontSize: 90, fontFamily: 'Kablammo'),
+              style: TextStyle(fontSize: fontSize, fontFamily: 'Kablammo'),
             ),
           ),
           Positioned(
-            left: -50,
-            right: -50,
-            bottom: -10,
+            left: -scaleWidth(100),
+            right: -scaleWidth(100),
+            bottom: 0,
             child: Lottie.asset('assets/lottiefiles/grass_animation.json'),
           ),
           AnimatedBuilder(
@@ -153,31 +160,31 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
             builder: (context, child) {
               return Positioned(
                 left: _animation.value,
-                bottom: 40,
+                bottom: scaleHeight(130),
                 child: SizedBox(
-                  height: 100,
+                  height: scaleHeight(300),
                   child: Lottie.asset('assets/lottiefiles/banana.json'),
                 ),
               );
             },
           ),
-
           if (isLoading)
             const Center(
               child: CircularProgressIndicator(),
             )
           else
             Positioned(
-              left: 15,
-              top: 220,
+              left: scaleWidth(50),
+              right: scaleWidth(50),
+              top: scaleHeight(770),
               child: SizedBox(
-                width: 380,
-                height: 800,
+                width: scaleWidth(1000),
+                height: scaleHeight(1500),
                 child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
+                    mainAxisSpacing: scaleHeight(20),
+                    crossAxisSpacing: scaleWidth(20),
                     childAspectRatio: 1,
                   ),
                   itemCount: 20,
@@ -207,9 +214,9 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
                             ),
                             child: Text(
                               '${index + 1}', // Display the level number
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 36,
+                                fontSize: scaleWidth(100), // Scaled font size
                                 fontFamily: 'Kablammo',
                               ),
                             ),
@@ -273,7 +280,7 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
                       ),
                     );
                   },
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(scaleWidth(10)), // Scaled padding
                 ),
               ),
             ),
@@ -282,4 +289,3 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
     );
   }
 }
-

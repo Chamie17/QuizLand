@@ -16,7 +16,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  final AudioManager _audioManager = AudioManager(); // Instance of AudioManager
+  final AudioManager _audioManager = AudioManager();
   final TextEditingController _nameController = TextEditingController();
   List<String> avatarImageNames = [
     'boy1.png',
@@ -337,7 +337,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           onPressed: () async {
                             await _audioManager.stopMusic();
                             FirebaseAuth.instance.signOut();
-                            context.pushReplacementNamed('login');
+                            context.pushReplacementNamed('welcome');
                           },
                           child: const Text("Đăng xuất", style: TextStyle(color: Colors.black),),
                         ),

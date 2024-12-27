@@ -53,6 +53,16 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
   late SharedPreferences prefs;
 
   @override
+  void dispose() {
+    _audioPlayer.dispose();
+    _controller.dispose();
+    _controller2.dispose();
+
+    super.dispose();
+  }
+
+
+  @override
   void initState() {
     super.initState();
     // Initialize the AnimationController

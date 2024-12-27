@@ -35,9 +35,6 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
     users.add(await userService.getUserById(top3Users[0]['uid']));
     users.add(await userService.getUserById(top3Users[1]['uid']));
     users.add(await userService.getUserById(top3Users[2]['uid']));
-    print(users);
-
-    setState(() {});
   }
 
   @override
@@ -81,7 +78,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _handleButton(String game) async{
+  void _handleButton(String game) async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
       await AudioPlayer().play(AssetSource('sound_effects/click_sound_1.mp3'));
@@ -171,93 +168,6 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
             ),
           ),
 
-          users.isNotEmpty
-              ? Positioned(
-                  left: 89,
-                  bottom: 350 + 110,
-                  child: SizedBox(
-                    height: 70,
-                    child: AnimatedBuilder(
-                      animation: _scaleAnimation1,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: _scaleAnimation1.value,
-                          child: CachedNetworkImage(
-                            imageUrl: users[2]['imageUrl'],
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                )
-              : const Positioned(
-                  left: 105,
-                  bottom: 350 + 125,
-                  child: CircularProgressIndicator(),
-                ),
-
-          users.isNotEmpty
-              ? Positioned(
-                  left: 177,
-                  bottom: 395 + 130,
-                  child: SizedBox(
-                    height: 70,
-                    child: AnimatedBuilder(
-                      animation: _scaleAnimation2,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: _scaleAnimation2.value,
-                          child: CachedNetworkImage(
-                            imageUrl: users[0]['imageUrl'],
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                )
-              : const Positioned(
-                  left: 195,
-                  bottom: 395 + 145,
-                  child: CircularProgressIndicator(),
-                ),
-
-          users.isNotEmpty
-              ? Positioned(
-                  right: 87,
-                  bottom: 362 + 110,
-                  child: SizedBox(
-                    height: 70,
-                    child: AnimatedBuilder(
-                      animation: _scaleAnimation3,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: _scaleAnimation3.value,
-                          child: CachedNetworkImage(
-                            imageUrl: users[1]['imageUrl'],
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                )
-              : const Positioned(
-                  right: 102,
-                  bottom: 362 + 125,
-                  child: CircularProgressIndicator(),
-                ),
-
           Positioned(
             left: 90,
             bottom: 350,
@@ -306,6 +216,7 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
+
           Positioned(
             left: 80,
             bottom: 350 + 100,
@@ -314,9 +225,32 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
               child: AnimatedBuilder(
                 animation: _scaleAnimation1,
                 builder: (context, child) {
-                  return Transform.scale(
-                    scale: _scaleAnimation1.value,
-                    child: Image.asset("assets/images/frame_brone.png"),
+                  return Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      Positioned(
+                        child: Transform.scale(
+                          scale: _scaleAnimation1.value,
+                          child: SizedBox(
+                            height: 75,
+                            child: CachedNetworkImage(
+                              imageUrl: users.length == 3 ? users[2]['imageUrl'] : "",
+                              fit: BoxFit.fill,
+                              placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) =>
+                              const Center(child: CircularProgressIndicator()),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        child: Transform.scale(
+                          scale: _scaleAnimation1.value,
+                          child: Image.asset("assets/images/frame_brone.png"),
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
@@ -330,9 +264,32 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
               child: AnimatedBuilder(
                 animation: _scaleAnimation2,
                 builder: (context, child) {
-                  return Transform.scale(
-                    scale: _scaleAnimation2.value,
-                    child: Image.asset("assets/images/frame_gold.png"),
+                  return Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Positioned(
+                        child: Transform.scale(
+                          scale: _scaleAnimation1.value,
+                          child: SizedBox(
+                            height: 75,
+                            child: CachedNetworkImage(
+                              imageUrl: users.length == 3 ? users[0]['imageUrl'] : "",
+                              fit: BoxFit.fill,
+                              placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) =>
+                              const Center(child: CircularProgressIndicator()),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        child: Transform.scale(
+                          scale: _scaleAnimation1.value,
+                          child: Image.asset("assets/images/frame_gold.png"),
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
@@ -346,9 +303,32 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
               child: AnimatedBuilder(
                 animation: _scaleAnimation3,
                 builder: (context, child) {
-                  return Transform.scale(
-                    scale: _scaleAnimation3.value,
-                    child: Image.asset("assets/images/frame_silver.png"),
+                  return Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Positioned(
+                        child: Transform.scale(
+                          scale: _scaleAnimation1.value,
+                          child: SizedBox(
+                            height: 75,
+                            child: CachedNetworkImage(
+                              imageUrl: users.length == 3 ? users[1]['imageUrl'] : "",
+                              fit: BoxFit.fill,
+                              placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) =>
+                              const Center(child: CircularProgressIndicator()),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        child: Transform.scale(
+                          scale: _scaleAnimation1.value,
+                          child: Image.asset("assets/images/frame_silver.png"),
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),

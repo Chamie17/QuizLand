@@ -24,6 +24,16 @@ class _HomeBodyState extends State<HomeBody>
   late AnimationController _wordController;
   late Animation<double> _wordAnimation;
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    _musicController.dispose();
+    _wordController.dispose();
+
+    super.dispose();
+  }
+
+
   var _keyMusic = GlobalKey();
   var _keyWord = GlobalKey();
   var _keyCommunicate = GlobalKey();
@@ -277,7 +287,7 @@ class _HomeBodyState extends State<HomeBody>
 
     ).show(context:context);
   }
-  
+
   void _goToMatchingScreen() async {
     bool isMute = prefs.getBool('isMute') ?? false;
     if (!isMute) {
@@ -312,203 +322,210 @@ class _HomeBodyState extends State<HomeBody>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    double scaleHeight(double inputHeight) => inputHeight * screenHeight / 2856;
+    double scaleWidth(double inputWidth) => inputWidth * screenWidth / 1280;
+
+    return Stack(
       children: [
-        Stack(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - getBottomHeight(),
-              child: Image.asset('assets/images/bg.jpg', fit: BoxFit.fill,),
-            ),
-            // sun
-            Positioned(
-              right: 0,
-              top: 0,
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (context, child) {
-                  return Transform.rotate(
-                    angle: _animation.value, // Rotates the widget
-                    child: child,
-                  );
-                },
-                child: SizedBox(
-                  height: 120,
-                  child: Image.asset('assets/images/sun.png'),
-                ), // Your image
-              ),
-            ),
+        SizedBox(
+          width: screenWidth,
+          height: screenHeight - getBottomHeight(),
+          child: Image.asset(
+            'assets/images/bg.jpg',
+            fit: BoxFit.fill,
+          ),
+        ),
 
-            // nha am nhac
-            Positioned(
-              key: _keyMusic,
-              left: 50,
-              top: 25,
-              child: AnimatedBuilder(
-                animation: _musicAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _musicAnimation.value,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onTap:  _goToMusicScreen,
-                        child: SizedBox(
-                          height: 160,
-                          child: Image.asset('assets/images/h1.png'),
-                        ),
-                      ),
+        // Sun
+        Positioned(
+          right: 0,
+          top: 0,
+          child: AnimatedBuilder(
+            animation: _animation,
+            builder: (context, child) {
+              return Transform.rotate(
+                angle: _animation.value,
+                child: child,
+              );
+            },
+            child: SizedBox(
+              height: scaleHeight(360),
+              child: Image.asset('assets/images/sun.png'),
+            ),
+          ),
+        ),
+
+        // Music House
+        Positioned(
+          key: _keyMusic,
+          left: scaleWidth(180),
+          top: scaleHeight(25),
+          child: AnimatedBuilder(
+            animation: _musicAnimation,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _musicAnimation.value,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: _goToMusicScreen,
+                    child: SizedBox(
+                      height: scaleHeight(500),
+                      child: Image.asset('assets/images/h1.png'),
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
 
-            Positioned(
-                left: 10,
-                top: 80,
-                child: SizedBox(
-                  height: 120,
-                  child: Image.asset('assets/images/nhaamnhac.png'),
-                ),),
+        Positioned(
+          left: scaleWidth(70),
+          top: scaleHeight(200),
+          child: SizedBox(
+            height: scaleHeight(390),
+            child: Image.asset('assets/images/nhaamnhac.png'),
+          ),
+        ),
 
-            // nha tu vung
-            Positioned(
-              key: _keyWord,
-              right: -40,
-              top: 160,
-              child: AnimatedBuilder(
-                animation: _wordAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _wordAnimation.value,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onTap:  _goToWordScreen,
-                        child: SizedBox(
-                          height: 160,
-                          child: Image.asset('assets/images/h2.png'),
-                        ),
-                      ),
+        // Vocabulary House
+        Positioned(
+          key: _keyWord,
+          right: scaleWidth(-100),
+          top: scaleHeight(440),
+          child: AnimatedBuilder(
+            animation: _wordAnimation,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _wordAnimation.value,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: _goToWordScreen,
+                    child: SizedBox(
+                      height: scaleHeight(500),
+                      child: Image.asset('assets/images/h2.png'),
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
 
-            Positioned(
-              right: 95,
-              top: 185,
-              child: SizedBox(
-                height: 120,
-                child: Image.asset('assets/images/nhatuvung.png'),
-              ),
-            ),
+        Positioned(
+          right: scaleWidth(300),
+          top: scaleHeight(540),
+          child: SizedBox(
+            height: scaleHeight(360),
+            child: Image.asset('assets/images/nhatuvung.png'),
+          ),
+        ),
 
-            // nha giao tiep
-            Positioned(
-              key: _keyCommunicate,
-              left: 10,
-              top: 280,
-              child: AnimatedBuilder(
-                animation: _musicAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _musicAnimation.value,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onTap:  _goToCommunicateScreen,
-                        child: SizedBox(
-                          height: 160,
-                          child: Image.asset('assets/images/h3.png'),
-                        ),
-                      ),
+        // Communication House
+        Positioned(
+          key: _keyCommunicate,
+          left: scaleWidth(50),
+          top: scaleHeight(850),
+          child: AnimatedBuilder(
+            animation: _musicAnimation,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _musicAnimation.value,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: _goToCommunicateScreen,
+                    child: SizedBox(
+                      height: scaleHeight(500),
+                      child: Image.asset('assets/images/h3.png'),
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
 
-            Positioned(
-              left: 115,
-              bottom: 380,
-              child: SizedBox(
-                height: 120,
-                child: Image.asset('assets/images/nhagiaotiep.png'),
-              ),
-            ),
+        Positioned(
+          left: scaleWidth(380),
+          bottom: scaleHeight(1200),
+          child: SizedBox(
+            height: scaleHeight(360),
+            child: Image.asset('assets/images/nhagiaotiep.png'),
+          ),
+        ),
 
-            // nha ket noi
-            Positioned(
-              key: _keyConnect,
-              left: 60,
-              bottom: 80,
-              child: AnimatedBuilder(
-                animation: _wordAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _wordAnimation.value,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onTap:  _goToMatchingScreen,
-                        child: SizedBox(
-                          height: 160,
-                          child: Image.asset('assets/images/h4.png'),
-                        ),
-                      ),
+        // Connection House
+        Positioned(
+          key: _keyConnect,
+          left: scaleWidth(230),
+          bottom: scaleHeight(200),
+          child: AnimatedBuilder(
+            animation: _wordAnimation,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _wordAnimation.value,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: _goToMatchingScreen,
+                    child: SizedBox(
+                      height: scaleHeight(500),
+                      child: Image.asset('assets/images/h4.png'),
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
 
-            Positioned(
-              right: 130,
-              bottom: 60,
-              child: SizedBox(
-                height: 120,
-                child: Image.asset('assets/images/nhaketnoi.png'),
-              ),
-            ),
+        Positioned(
+          right: scaleWidth(320),
+          bottom: scaleHeight(140),
+          child: SizedBox(
+            height: scaleHeight(360),
+            child: Image.asset('assets/images/nhaketnoi.png'),
+          ),
+        ),
 
-            Positioned(
-              right: 20,
-              bottom: 290,
-              child: AnimatedBuilder(
-                animation: _musicAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _musicAnimation.value,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: showTutorial,
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        child: SizedBox(
-                          height: 180,
-                          child: Image.asset('assets/images/monkey.png'),
-                        ),
-                      ),
+        // Monkey
+        Positioned(
+          right: scaleWidth(100),
+          bottom: scaleHeight(800),
+          child: AnimatedBuilder(
+            animation: _musicAnimation,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _musicAnimation.value,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: showTutorial,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    child: SizedBox(
+                      height: scaleHeight(550),
+                      child: Image.asset('assets/images/monkey.png'),
                     ),
-                  );
-                },
-              ),
-            ),
-
-          ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ],
     );

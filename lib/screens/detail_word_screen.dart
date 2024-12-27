@@ -27,6 +27,15 @@ class _DetailWordScreenState extends State<DetailWordScreen> {
   late String? imagePath;
   bool isLoading = true;
 
+  @override
+  void dispose() {
+    // Dispose the audio player when the widget is disposed
+    _audioPlayer.dispose();
+
+    super.dispose();
+  }
+
+
   String? getImagePath(String imageName) {
     for (var entry in matchingLevel.entries) {
       for (var image in entry.value) {
@@ -87,7 +96,17 @@ class _DetailWordScreenState extends State<DetailWordScreen> {
 
       }
     } else {
-      throw Exception('Failed to load pronunciation');
+      pronunciation = 'Not available';
+      partsOfSpeech = ['Not available'];
+
+      final byteData = await rootBundle.load("assets/${widget.audioUrl}");
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File('${tempDir.path}/${widget.word}.mp3');
+      await tempFile.writeAsBytes(byteData.buffer.asUint8List());
+      final metadata = await readMetadata(tempFile, getImage: false);
+      meaning = metadata.title!;
+
+      imagePath = getImagePath(widget.word);
     }
   }
 

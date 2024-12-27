@@ -21,16 +21,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    double fontSize = screenWidth * 0.15;
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Row(),
-          const Text(
+          Text(
             "Quiz Land",
             style: TextStyle(
-                color: Colors.purple, fontSize: 60, fontFamily: 'Kablammo'),
+                color: Colors.purple, fontSize: fontSize, fontFamily: 'Kablammo'),
           ),
           SizedBox(
             height: 350,

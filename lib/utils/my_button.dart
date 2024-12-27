@@ -16,7 +16,7 @@ class _MyButtonState extends State<MyButton> {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: SizedBox(
         height: 42,
-        width: (MediaQuery.of(context).size.height / 4),
+        width: (MediaQuery.of(context).size.height / 3),
         child: ElevatedButton(
           onPressed: widget.onPressed,
           child: Text(
