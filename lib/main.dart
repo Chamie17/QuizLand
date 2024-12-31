@@ -31,8 +31,8 @@ void main() async{
   await AudioManager().init();
 
   runApp(DevicePreview(
-    enabled: !kReleaseMode || kIsWeb,
-    isToolbarVisible: !kIsWeb,
+    enabled: !kReleaseMode,
+    isToolbarVisible: true,
     storage: DevicePreviewStorage.preferences(),
     builder: (context) => const MyApp(),
     defaultDevice: Devices.ios.iPhone13ProMax,
