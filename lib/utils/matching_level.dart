@@ -127,7 +127,7 @@ Map<int, List<String>> matchingLevel = {
     'doctor.jpg',
     'driver.jpg',
     'farmer.jpg',
-    'job.jpg',
+    'job.jpeg',
     'nurse.jpg',
     'singer.jpg',
     'teacher.jpg',
@@ -135,7 +135,7 @@ Map<int, List<String>> matchingLevel = {
   ],
   13: [
     'bathroom.jpg',
-    'bedroom.jpg',
+    'bedroom.jpeg',
     'chair.jpg',
     'here.jpg',
     'house.jpg',
@@ -152,7 +152,7 @@ Map<int, List<String>> matchingLevel = {
     'bed.jpg',
     'desk.jpg',
     'door.jpg',
-    'big.jpg',
+    'big.jpeg',
     'new.jpg',
     'room.jpg',
     'old.jpg',
@@ -160,7 +160,7 @@ Map<int, List<String>> matchingLevel = {
     'window.jpg',
   ],
   15: [
-    'bean.jpg',
+    'bean.jpeg',
     'bread.jpg',
     'chicken.jpg',
     'dinning table.jpg',
@@ -186,7 +186,6 @@ Map<int, List<String>> matchingLevel = {
   17: [
     'bus.jpeg',
     'car.jpeg',
-    'count.jpeg',
     'kite.jpeg',
     'plane.jpeg',
     'ship.jpeg',
@@ -217,7 +216,7 @@ Map<int, List<String>> matchingLevel = {
   ],
   20: [
     'climb.jpeg',
-    'count.jpg',
+    'count.jpeg',
     'elephant.jpeg',
     'horse.jpeg',
     'monkey.jpeg',

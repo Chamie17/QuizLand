@@ -112,7 +112,7 @@ class _MenuScreenState extends State<MenuScreen> with SingleTickerProviderStateM
 
     double scaleWidth(double width) => width * screenWidth / 1280;
     double scaleHeight(double height) => height * screenHeight / 2856;
-    double fontSize = scaleWidth(300);
+    double fontSize = scaleWidth(250);
 
     return Scaffold(
       body: Stack(

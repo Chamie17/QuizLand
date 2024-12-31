@@ -35,12 +35,17 @@ class _RankScreenState extends State<RankScreen> with TickerProviderStateMixin {
     users.add(await userService.getUserById(top3Users[0]['uid']));
     users.add(await userService.getUserById(top3Users[1]['uid']));
     users.add(await userService.getUserById(top3Users[2]['uid']));
+    setState(() {
+
+    });
+
   }
 
   @override
   void initState() {
     super.initState();
     init();
+
 
     _controller1 = AnimationController(
       duration: const Duration(seconds: 2),

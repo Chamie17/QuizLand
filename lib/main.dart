@@ -1,9 +1,11 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quizland_app/services/audio_manager.dart';
 import 'package:quizland_app/utils/app_router.dart';
 import 'package:quizland_app/utils/app_theme.dart';
+import 'package:device_preview/device_preview.dart';
 
 import 'firebase_options.dart';
 
@@ -28,7 +30,13 @@ void main() async{
 
   await AudioManager().init();
 
-  runApp(const MyApp());
+  runApp(DevicePreview(
+    enabled: !kReleaseMode || kIsWeb,
+    isToolbarVisible: !kIsWeb,
+    storage: DevicePreviewStorage.preferences(),
+    builder: (context) => const MyApp(),
+    defaultDevice: Devices.ios.iPhone13ProMax,
+  ),);
 }
 
 class MyApp extends StatelessWidget {
@@ -42,6 +50,9 @@ class MyApp extends StatelessWidget {
     //* home la phan noi dung cua app
 
     return MaterialApp.router(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.appTheme,
       routerConfig: router,
