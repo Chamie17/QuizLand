@@ -155,7 +155,6 @@
     "living room.mp3",
     "on.mp3",
     "table.mp3",
-    "teddy bear.mp3",
     "there.mp3"
   ],
   "14": [
@@ -179,7 +178,60 @@
     "juice.mp3",
     "meat.mp3",
     "milk.mp3",
-    "rice.mp3",
+    "rice.mp3"
+
+  ],
+  "16": [
+    "bird.mp3",
+    "cat.mp3",
+    "dog.mp3",
+    "goldfish.mp3",
+    "how many.mp3",
+    "many.mp3",
+    "parrot.mp3",
+    "pet.mp3",
+    "rabbit.mp3",
     "some.mp3"
+  ],
+  "17": [
+    "bus.mp3",
+    "car.mp3",
+    "kite.mp3",
+    "plane.mp3",
+    "ship.mp3",
+    "teddy bear.mp3",
+    "toy.mp3",
+    "train.mp3",
+    "truck.mp3"
+  ],
+  "18": [
+    "draw a picture.mp3",
+    "fun.mp3",
+    "listen to music.mp3",
+    "read.mp3",
+    "sing.mp3",
+    "watch TV.mp3",
+    "write.mp3"
+  ],
+  "19": [
+    "cycle.mp3",
+    "fly a kite.mp3",
+    "outdoor activities.mp3",
+    "park.mp3",
+    "run.mp3",
+    "skate.mp3",
+    "skip.mp3",
+    "sport.mp3",
+    "walk.mp3"
+  ],
+  "20": [
+    "climb.mp3",
+    "count.mp3",
+    "elephant.mp3",
+    "horse.mp3",
+    "monkey.mp3",
+    "peacock.mp3",
+    "swing.mp3",
+    "tiger.mp3"
   ]
 }
