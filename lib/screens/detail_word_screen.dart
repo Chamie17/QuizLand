@@ -35,11 +35,14 @@ class _DetailWordScreenState extends State<DetailWordScreen> {
     super.dispose();
   }
 
+  String stripExtension(String fileName) {
+    return fileName.split('.').first;
+  }
 
   String? getImagePath(String imageName) {
     for (var entry in matchingLevel.entries) {
       for (var image in entry.value) {
-        if (image.startsWith(imageName)) {
+        if (stripExtension(image) == imageName) {
           return 'assets/matching_source/${entry.key}/$image';
         }
       }
@@ -93,7 +96,6 @@ class _DetailWordScreenState extends State<DetailWordScreen> {
             if (imagePath != null) break;
           }
         }
-
       }
     } else {
       pronunciation = 'Not available';
@@ -193,7 +195,7 @@ class _DetailWordScreenState extends State<DetailWordScreen> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(imagePath!),
+                        child: Image.asset(imagePath ?? "assets/images/image_placeholder.jpg"),
                       ),
                     ),
                   ),

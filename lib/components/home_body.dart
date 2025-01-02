@@ -104,7 +104,7 @@ class _HomeBodyState extends State<HomeBody>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Nhà âm nhạc",
+                        "Nhà âm thanh",
                         style: GoogleFonts.lalezar(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
