@@ -73,12 +73,12 @@ Map<int, List<String>> matchingLevel = {
     'sit down.jpg',
     'speak.jpg',
     'stand up.jpg',
-    'Vietnamese.jpg'
+    'Vietnamese.jpg',
   ],
   8: [
     'book.jpg',
     'eraser.jpg',
-    'have.png'
+    'have.png',
     'notebook.jpg',
     'pen.jpg',
     'pencil case.jpg',
@@ -94,7 +94,7 @@ Map<int, List<String>> matchingLevel = {
     'orange.jpg',
     'red.jpg',
     'white.jpg',
-    'yellow.jpg'
+    'yellow.jpg',
   ],
   10: [
     'badminton.jpg',
@@ -149,7 +149,7 @@ Map<int, List<String>> matchingLevel = {
     'on.jpg',
     'table.jpg',
     'teddy bear.jpg',
-    'there.jpg'
+    'there.jpg',
   ],
   14: [
     'bed.jpg',
@@ -160,7 +160,7 @@ Map<int, List<String>> matchingLevel = {
     'room.jpg',
     'old.jpg',
     'small.jpg',
-    'window.jpg',
+    'window.jpg'
   ],
   15: [
     'bean.jpeg',

@@ -32,7 +32,7 @@ class AudioManager {
   // Play music if the player is initialized
   Future<void> playMusic() async {
     try {
-      if (_audioPlayer != null && !isMute) {
+      if (_audioPlayer != null) {
         await _audioPlayer!.play(AssetSource('musics/bg_music.mp3'));
         isMusicPlaying = true;
       }
