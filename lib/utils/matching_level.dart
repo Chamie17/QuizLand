@@ -68,12 +68,12 @@ Map<int, List<String>> matchingLevel = {
   7: [
     'close.jpg',
     'come in.jpg',
-    "English.jpeg"
+    'English.jpeg',
     'go out.jpg',
     'sit down.jpg',
     'speak.jpg',
     'stand up.jpg',
-    "Vietnamese.jpg"
+    'Vietnamese.jpg'
   ],
   8: [
     'book.jpg',

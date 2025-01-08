@@ -296,8 +296,6 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
     }
   }
 
-
-
   Widget _buildQuestion(int index) {
     final bool isSelected = _questionSelected[index];
     final bool isMatched = _questionMatched[index];

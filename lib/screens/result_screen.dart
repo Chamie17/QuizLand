@@ -29,6 +29,7 @@ class ResultScreen extends StatefulWidget {
 
 class _ResultScreenState extends State<ResultScreen> {
   late SharedPreferences prefs;
+  late AudioPlayer _audioPlayer;
 
   void saveResult() async {
     int star = getStar();
@@ -56,8 +57,9 @@ class _ResultScreenState extends State<ResultScreen> {
   void init() async {
     prefs = await SharedPreferences.getInstance();
     bool isMute = prefs.getBool('isMute') ?? false;
+    _audioPlayer = await AudioPlayer();
     if (!isMute) {
-      await AudioPlayer().play(AssetSource('sound_effects/result_sound_${getStar()}.mp3'));
+      _audioPlayer.play(AssetSource('sound_effects/result_sound_${getStar()}.mp3'));
     }
   }
 
@@ -135,6 +137,12 @@ class _ResultScreenState extends State<ResultScreen> {
               gameName: 'arrangeSentence',),));
         break;
     }
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
   @override
