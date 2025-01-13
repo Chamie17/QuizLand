@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
 import '../models/question_answer.dart';
+import '../services/audio_manager.dart';
 
 class ArrangeSentenceGameScreen extends StatefulWidget {
   ArrangeSentenceGameScreen({super.key, required this.level});
@@ -32,8 +33,10 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
   int correctAnswers = 0;
   int incorrectAnswers = 0;
   late SharedPreferences prefs;
+  final AudioManager _audioManager = AudioManager();
 
   void init() async {
+    await _audioManager.stopMusic();
     prefs = await SharedPreferences.getInstance();
   }
 
@@ -143,6 +146,11 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
         initializeGame();
       });
     } else {
+
+      bool isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
+      if(isMusicPlaying) {
+        await _audioManager.playMusic();
+      }
       // End of the game
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
@@ -160,7 +168,8 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
     }
   }
 
-  void resetGame() {
+  void resetGame() async{
+    await _audioManager.stopMusic();
     setState(() {
       correctAnswers = 0;
       incorrectAnswers = 0;
@@ -186,6 +195,15 @@ class _ArrangeSentenceGameScreenState extends State<ArrangeSentenceGameScreen>
         incorrectAnswers++;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    bool isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
+    if(isMusicPlaying) {
+      _audioManager.playMusic();
+    }
+    super.dispose();
   }
 
   @override

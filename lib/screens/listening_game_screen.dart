@@ -12,7 +12,9 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vibration/vibration.dart'; // Import the vibration package
+import 'package:vibration/vibration.dart';
+
+import '../services/audio_manager.dart'; // Import the vibration package
 
 class ListeningGameScreen extends StatefulWidget {
   ListeningGameScreen({super.key, required this.level});
@@ -31,6 +33,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
   List<String> files = [];
   Map<String, String> audioTitles = {}; // Maps audio file to its title
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioManager _audioManager = AudioManager();
 
   List<String> currentRoundFiles = [];
   List<String> currentRoundAnswers = [];
@@ -54,6 +57,11 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
 
   @override
   void dispose() {
+    bool isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
+    if(isMusicPlaying) {
+      _audioManager.playMusic();
+    }
+
     _audioPlayer.dispose();
     _controller.dispose();
     _controller2.dispose();
@@ -64,6 +72,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
 
   @override
   void initState() {
+
     super.initState();
     // Initialize the AnimationController
     _controller = AnimationController(
@@ -103,6 +112,7 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
   }
 
   void init() async {
+    await _audioManager.stopMusic();
     prefs = await SharedPreferences.getInstance();
     // Load the audio files and their titles from the JSON
     final String jsonString =
@@ -147,7 +157,8 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
     return metadata.title;
   }
 
-  void resetGame() {
+  void resetGame() async{
+    await _audioManager.stopMusic();
     setState(() {
       roundsRemaining = 7;
       correctAnswers = 0;
@@ -166,6 +177,10 @@ class _ListeningGameScreenState extends State<ListeningGameScreen>
     selectedAnswer = null;
     selectedAudioFile = null;
     if (roundsRemaining <= 0) {
+      bool isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
+      if(isMusicPlaying) {
+        await _audioManager.playMusic();
+      }
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       bool? isReplay = await context.pushNamed('result', pathParameters: {

@@ -10,6 +10,8 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
+import '../services/audio_manager.dart';
+
 class WordInputGameScreen extends StatefulWidget {
   WordInputGameScreen({super.key, required this.level});
   final int level;
@@ -29,6 +31,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
   bool errorOccurred = false;
   late SharedPreferences prefs;
   var currentFile;
+  final AudioManager _audioManager = AudioManager();
 
   @override
   void initState() {
@@ -37,6 +40,7 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
   }
 
   Future<void> init() async {
+    await _audioManager.stopMusic();
     prefs = await SharedPreferences.getInstance();
     try {
       final String jsonString =
@@ -68,7 +72,8 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
     }
   }
 
-  void resetGame() {
+  void resetGame()async {
+    await _audioManager.stopMusic();
     setState(() {
       correctAnswers = 0;
       incorrectAnswers = 0;
@@ -83,6 +88,10 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
 
   void loadNextAudio() async{
     if (files.isEmpty) {
+      bool isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
+      if(isMusicPlaying) {
+        await _audioManager.playMusic();
+      }
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       bool? isReplay = await context.pushNamed('result', pathParameters: {
@@ -168,6 +177,10 @@ class _WordInputGameScreenState extends State<WordInputGameScreen> {
 
   @override
   void dispose() {
+    bool isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
+    if(isMusicPlaying) {
+      _audioManager.playMusic();
+    }
     super.dispose();
   }
 

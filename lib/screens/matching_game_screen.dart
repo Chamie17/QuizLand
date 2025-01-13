@@ -9,6 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
+import '../services/audio_manager.dart';
 import '../utils/matching_level.dart';
 
 class MatchingGameScreen extends StatefulWidget {
@@ -42,6 +43,8 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   late SharedPreferences prefs;
   Map<String, int> questionDisplayCount = {};
 
+  final AudioManager _audioManager = AudioManager();
+
   @override
   void initState() {
     super.initState();
@@ -50,11 +53,16 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
 
   @override
   void dispose() {
+    bool isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
+    if(isMusicPlaying) {
+      _audioManager.playMusic();
+    }
     _controller_worm.dispose();
     super.dispose();
   }
 
   void init() async {
+    await _audioManager.stopMusic();
     prefs = await SharedPreferences.getInstance();
     _controller_worm = AnimationController(
       duration: const Duration(seconds: 8),
@@ -174,6 +182,7 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   }
 
   void resetGame() {
+    _audioManager.stopMusic();
     setState(() {
       _point = 0;
       _minus = 0;
@@ -189,6 +198,10 @@ class _MatchingGameScreenState extends State<MatchingGameScreen>
   }
 
   void _showCompletionDialog() async{
+    bool isMusicPlaying = prefs.getBool('isMusicPlaying') ?? true;
+    if(isMusicPlaying) {
+      _audioManager.playMusic();
+    }
     _logQuestionDisplayCounts();
 
     String uid = FirebaseAuth.instance.currentUser!.uid;
